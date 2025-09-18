@@ -1,0 +1,37 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.brf
+*.dvi
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.pdf
+*.ps
+*.run.xml
+*.snm
+*.synctex.gz
+*.thm
+*.toc
+*.vrb
+*.xdv
+
+# MacOS
+.DS_Store
+
+# Editor/IDE
+.vscode/
+.idea/
+*.code-workspace

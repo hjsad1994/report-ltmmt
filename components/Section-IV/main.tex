@@ -1,0 +1,405 @@
+\newpage
+
+\section{\textbf{CHƯƠNG 2: CƠ SỞ LÝ THUYẾT  }}
+
+
+
+\subsection{Giới thiệu}
+Chương này trình bày cơ sở lý thuyết của các công nghệ được sử dụng trong đồ án "Xây dựng website mạng xã hội Honey". Các công nghệ chính bao gồm MERN Stack (MongoDB, Express.js, React.js, Node.js), cùng với các công nghệ bổ trợ như JWT, Socket.IO, Cloudinary, Elasticsearch, và OpenAI API. Mỗi công nghệ sẽ được phân tích về khái niệm, kiến trúc, ứng dụng trong hệ thống, lợi ích, và cách tối ưu hóa.
+
+\subsection{Mô hình MVC (Model-View-Controller)}
+
+\textbf{Khái niệm:}
+MVC là mô hình kiến trúc phần mềm chia ứng dụng thành ba thành phần chính: Model (Mô hình), View (Giao diện), và Controller (Điều khiển). Mô hình này tách biệt logic nghiệp vụ, giao diện người dùng và xử lý yêu cầu, tạo ra code có tính bảo trì cao và dễ mở rộng.
+
+\textbf{Các thành phần của MVC:}
+
+\textbf{1. Model (Mô hình):}
+\begin{itemize}
+\item Quản lý dữ liệu và logic nghiệp vụ của ứng dụng
+\item Tương tác với cơ sở dữ liệu, validation dữ liệu
+\item Không phụ thuộc vào View và Controller
+\item Thông báo cho View khi dữ liệu thay đổi
+\end{itemize}
+
+\textbf{2. View (Giao diện):}
+\begin{itemize}
+\item Hiển thị dữ liệu cho người dùng và nhận input
+\item Render UI components, xử lý tương tác người dùng
+\item Không chứa business logic, chỉ hiển thị dữ liệu
+\item Lắng nghe thay đổi từ Model để cập nhật giao diện
+\end{itemize}
+
+\textbf{3. Controller (Điều khiển):}
+\begin{itemize}
+\item Xử lý input từ user, điều phối giữa Model và View
+\item Nhận request từ View, gọi Model xử lý
+\item Cập nhật View với dữ liệu từ Model
+\item Không chứa business logic hay presentation logic
+\end{itemize}
+
+\textbf{Luồng hoạt động:}
+\begin{enumerate}
+\item User tương tác với View (click, submit form)
+\item View gửi request đến Controller
+\item Controller xử lý request và gọi Model
+\item Model thực hiện business logic và truy cập database
+\item Model trả kết quả về Controller
+\item Controller cập nhật View với dữ liệu mới
+\item View hiển thị kết quả cho User
+\end{enumerate}
+
+\textbf{Lợi ích của MVC:}
+\begin{itemize}
+\item \textbf{Separation of Concerns}: Tách biệt rõ ràng các chức năng
+\item \textbf{Maintainability}: Dễ sửa đổi và bảo trì từng thành phần
+\item \textbf{Testability}: Có thể test riêng từng layer
+\item \textbf{Reusability}: Tái sử dụng Model và View cho nhiều mục đích
+\item \textbf{Scalability}: Hỗ trợ phát triển team và mở rộng hệ thống
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Model}: Mongoose schemas (User, Post, Comment), business logic
+\item \textbf{View}: React components hiển thị UI, JSON responses từ API
+\item \textbf{Controller}: Express.js route handlers xử lý HTTP requests
+\end{itemize}
+
+
+
+
+\subsection{Công nghệ nền tảng}
+
+\subsubsection{MongoDB}
+\textbf{Khái niệm và kiến trúc:}
+MongoDB là hệ quản trị cơ sở dữ liệu NoSQL thuộc loại document-based, lưu trữ dữ liệu dưới dạng BSON (Binary JSON). Khác với cơ sở dữ liệu quan hệ truyền thống, MongoDB không yêu cầu schema cố định, cho phép lưu trữ các document có cấu trúc khác nhau trong cùng một collection.
+
+\textbf{Đặc điểm kỹ thuật:}
+\begin{itemize}
+\item \textbf{Document Structure}: Hỗ trợ nested objects và arrays, phù hợp với dữ liệu phức tạp
+\item \textbf{Horizontal Scaling}: Hỗ trợ sharding để phân tán dữ liệu trên nhiều server
+\item \textbf{ACID Transactions}: Đảm bảo tính nhất quán dữ liệu trong các thao tác phức tạp
+\item \textbf{Aggregation Pipeline}: Xử lý và phân tích dữ liệu mạnh mẽ
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Collections chính}: Users (người dùng), Posts (bài viết), Comments (bình luận), Messages (tin nhắn), Reports (báo cáo), Notifications (thông báo)
+\item \textbf{Schema linh hoạt}: Trường \texttt{postVector} trong schema \texttt{Post} lưu vector nhúng từ OpenAI API để gợi ý bài viết thông minh
+\item \textbf{Quan hệ dữ liệu}: Sử dụng ObjectId để liên kết giữa các collections, \texttt{populate} để join dữ liệu
+\end{itemize}
+
+\textbf{Tối ưu hóa hiệu suất:}
+\begin{itemize}
+\item \textbf{Indexing Strategy}: 
+  \begin{itemize}
+  \item Compound index trên \texttt{\{userId: 1, createdAt: -1\}} cho API \texttt{GetFeedPosts}
+  \item Text index trên \texttt{content} cho tính năng tìm kiếm bài viết
+  \item Sparse index trên \texttt{postVector} cho vector search
+  \end{itemize}
+\item \textbf{Connection Pooling}: Sử dụng mongoose với maxPoolSize = 10 để tối ưu kết nối
+\item \textbf{MongoDB Atlas}: Triển khai trên AWS với auto-scaling và backup tự động
+\end{itemize}
+
+\subsubsection{Express.js}
+\textbf{Khái niệm và kiến trúc:}
+Express.js là web framework tối giản và linh hoạt cho Node.js, xây dựng dựa trên middleware pattern. Framework này cung cấp các tính năng mạnh mẽ để phát triển ứng dụng web và API một cách nhanh chóng.
+
+\textbf{Middleware Architecture:}
+\begin{itemize}
+\item \textbf{Built-in Middleware}: \texttt{express.json()}, \texttt{express.static()}, \texttt{express.urlencoded()}
+\item \textbf{Third-party Middleware}: 
+  \begin{itemize}
+  \item \texttt{cors}: Cross-Origin Resource Sharing
+  \item \texttt{helmet}: Security headers
+  \item \texttt{morgan}: HTTP request logging
+  \item \texttt{express-rate-limit}: Rate limiting
+  \end{itemize}
+\item \textbf{Custom Middleware}: Authentication, error handling, request validation
+\end{itemize}
+
+\textbf{RESTful API Design:}
+\begin{itemize}
+\item \textbf{Resource-based URLs}: \texttt{/api/users/:id}, \texttt{/api/posts/:postId/comments}
+\item \textbf{HTTP Methods}: GET (lấy dữ liệu), POST (tạo mới), PUT (cập nhật), DELETE (xóa)
+\item \textbf{Status Codes}: 200 (thành công), 201 (tạo mới), 400 (lỗi client), 401 (chưa xác thực), 500 (lỗi server)
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Route Handlers}: Xử lý đăng ký/đăng nhập, đăng bài viết, tương tác (like, comment), chat thời gian thực
+\item \textbf{Middleware JWT}: Xác thực người dùng và phân quyền truy cập API
+\item \textbf{Error Handling}: Centralized error handling với custom error classes
+\item \textbf{Validation}: Sử dụng joi hoặc express-validator để validate input
+\end{itemize}
+
+\subsubsection{React.js}
+\textbf{Khái niệm và kiến trúc:}
+React.js là thư viện JavaScript để xây dựng giao diện người dùng, sử dụng component-based architecture và Virtual DOM để tối ưu hiệu suất rendering.
+
+\textbf{Core Concepts:}
+\begin{itemize}
+\item \textbf{Virtual DOM}: Representation của DOM trong memory, cho phép efficient updates
+\item \textbf{Component Lifecycle}: Mounting, updating, unmounting phases
+\item \textbf{Unidirectional Data Flow}: Dữ liệu chảy từ parent xuống child components
+\item \textbf{React Hooks}: useState, useEffect, useContext, useReducer
+\end{itemize}
+
+\textbf{Component Architecture:}
+\begin{itemize}
+\item \textbf{Functional Components}: Sử dụng hooks thay vì class components
+\item \textbf{Higher-Order Components (HOC)}: Tái sử dụng logic giữa các components
+\item \textbf{Custom Hooks}: Tách logic phức tạp thành hooks có thể tái sử dụng
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{UI Components}: Header, Sidebar, PostCard, CommentSection, ChatBox
+\item \textbf{Pages}: Home Feed, Profile, Messages, Admin Dashboard
+\item \textbf{State Management}: Context API cho global state, local state cho component-specific data
+\item \textbf{Routing}: React Router cho SPA navigation
+\item \textbf{Responsive Design}: CSS Modules và Material-UI cho giao diện adaptive
+\end{itemize}
+
+\textbf{Performance Optimization:}
+\begin{itemize}
+\item \textbf{React.memo}: Ngăn re-render không cần thiết
+\item \textbf{useMemo \& useCallback}: Memoization cho expensive calculations
+\item \textbf{Code Splitting}: Lazy loading với React.lazy() và Suspense
+\item \textbf{Bundle Optimization}: Webpack optimization cho production build
+\end{itemize}
+
+\subsubsection{Node.js}
+\textbf{Khái niệm và kiến trúc:}
+Node.js là runtime environment cho phép chạy JavaScript trên server-side, sử dụng V8 JavaScript engine của Google Chrome và mô hình event-driven, non-blocking I/O.
+
+\textbf{Event Loop Architecture:}
+\begin{itemize}
+\item \textbf{Single-threaded}: Main thread xử lý JavaScript code
+\item \textbf{Event Loop}: Quản lý callbacks và async operations
+\item \textbf{Thread Pool}: Libuv thread pool cho I/O operations
+\item \textbf{Callback Queue}: Queue các callback functions để execute
+\end{itemize}
+
+\textbf{Core Modules:}
+\begin{itemize}
+\item \textbf{HTTP/HTTPS}: Tạo web servers
+\item \textbf{File System (fs)}: Thao tác với files
+\item \textbf{Path}: Xử lý đường dẫn files
+\item \textbf{Crypto}: Mã hóa và hash
+\item \textbf{Events}: Event emitter pattern
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Backend Server}: Vận hành Express.js server
+\item \textbf{Database Integration}: Kết nối và thao tác với MongoDB
+\item \textbf{Third-party APIs}: Tích hợp OpenAI API, Cloudinary, Elasticsearch
+\item \textbf{Real-time Features}: Socket.IO cho chat và notifications
+\item \textbf{Background Jobs}: Xử lý email, image processing, data analytics
+\end{itemize}
+
+\subsection{Công nghệ bổ trợ}
+
+\subsubsection{JWT (JSON Web Token)}
+\textbf{Khái niệm và cấu trúc:}
+JWT là chuẩn mở (RFC 7519) để truyền thông tin an toàn giữa các bên dưới dạng JSON object. Token bao gồm ba phần được mã hóa base64 và ngăn cách bởi dấu chấm.
+
+\textbf{Cấu trúc Token:}
+\begin{itemize}
+\item \textbf{Header}: Chứa loại token (JWT) và thuật toán mã hóa (HS256, RS256)
+\item \textbf{Payload}: Claims (thông tin user, permissions, expiry time)
+\item \textbf{Signature}: Đảm bảo token không bị thay đổi, tạo từ header + payload + secret
+\end{itemize}
+
+\textbf{Security Considerations:}
+\begin{itemize}
+\item \textbf{Token Expiry}: Access token (1 giờ), Refresh token (7 ngày)
+\item \textbf{Secret Management}: Sử dụng environment variables, rotation định kỳ
+\item \textbf{Token Storage}: HttpOnly cookies vs localStorage trade-offs
+\item \textbf{CSRF Protection}: SameSite cookie attribute
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Authentication Flow}: Login → Generate JWT → Store in httpOnly cookie
+\item \textbf{Authorization}: Middleware kiểm tra JWT trong header \texttt{Authorization}
+\item \textbf{User Context}: Decode JWT để lấy userId cho API calls
+\item \textbf{Session Management}: Refresh token mechanism cho long-term sessions
+\end{itemize}
+
+\subsubsection{WebSocket và Socket.IO}
+\textbf{WebSocket Protocol:}
+WebSocket là giao thức giao tiếp full-duplex qua single TCP connection, cho phép real-time communication giữa client và server.
+
+\textbf{Protocol Features:}
+\begin{itemize}
+\item \textbf{Handshake}: HTTP upgrade request để chuyển sang WebSocket
+\item \textbf{Frame Structure}: Text frames, binary frames, control frames
+\item \textbf{Connection States}: Connecting, open, closing, closed
+\item \textbf{Low Latency}: Giảm overhead so với HTTP polling
+\end{itemize}
+
+\textbf{Socket.IO Enhancements:}
+\begin{itemize}
+\item \textbf{Fallback Mechanisms}: Long-polling khi WebSocket không khả dụng
+\item \textbf{Room Management}: Grouping connections cho targeted messaging
+\item \textbf{Event-based Communication}: Custom events với structured data
+\item \textbf{Auto-reconnection}: Tự động kết nối lại khi mất connection
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Real-time Chat}: Tin nhắn tức thời giữa users
+\item \textbf{Live Notifications}: Thông báo comment, like, follow ngay lập tức
+\item \textbf{Online Status}: Hiển thị trạng thái online/offline của users
+\item \textbf{Namespace Organization}: \texttt{/chat}, \texttt{/notifications} cho separation of concerns
+\end{itemize}
+
+\subsubsection{Cloudinary}
+\textbf{Khái niệm và kiến trúc:}
+Cloudinary là cloud-based service chuyên về quản lý, tối ưu hóa và phân phối media assets (images, videos) qua global CDN network.
+
+\textbf{Image Processing Pipeline:}
+\begin{itemize}
+\item \textbf{Upload}: Direct upload từ client hoặc server-side với signed URLs
+\item \textbf{Transformation}: Real-time resize, crop, format conversion, quality optimization
+\item \textbf{Delivery}: CDN distribution với edge caching và geo-optimization
+\item \textbf{Storage}: Backup và version control cho media assets
+\end{itemize}
+
+\textbf{Optimization Techniques:}
+\begin{itemize}
+\item \textbf{Responsive Images}: Dynamic resizing dựa trên device và viewport
+\item \textbf{Format Optimization}: Auto-convert sang WebP/AVIF cho browsers hỗ trợ
+\item \textbf{Progressive Loading}: Progressive JPEG và lazy loading
+\item \textbf{Compression}: Intelligent quality adjustment để giảm file size
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Media Storage}: Ảnh bài viết, avatar, cover photos, chat images
+\item \textbf{Auto-optimization}: Tự động nén và convert format
+\item \textbf{Transformation Presets}: Avatar cropping (200x200), post images (max 1200px width)
+\item \textbf{CDN Delivery}: Fast loading từ nearest edge server
+\end{itemize}
+
+\subsubsection{Elasticsearch và Vector Search}
+\textbf{Elasticsearch Architecture:}
+Elasticsearch là distributed search engine xây dựng trên Apache Lucene, hỗ trợ full-text search và analytics.
+
+\textbf{Core Concepts:}
+\begin{itemize}
+\item \textbf{Inverted Index}: Mapping từ terms đến documents chứa terms đó
+\item \textbf{Sharding}: Phân tán data trên multiple nodes
+\item \textbf{Replication}: Backup data cho high availability
+\item \textbf{Cluster}: Tập hợp các nodes working together
+\end{itemize}
+
+\textbf{Vector Search (KNN):}
+\begin{itemize}
+\item \textbf{Dense Vectors}: High-dimensional representations từ machine learning models
+\item \textbf{Similarity Metrics}: Cosine similarity, dot product, euclidean distance
+\item \textbf{HNSW Algorithm}: Hierarchical Navigable Small World graphs cho fast approximate search
+\item \textbf{Vector Indexing}: Optimized index structures cho vector search
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Content Recommendation}: Gợi ý bài viết dựa trên semantic similarity
+\item \textbf{Vector Storage}: Lưu OpenAI embeddings trong \texttt{postVector} field
+\item \textbf{KNN Search}: Tìm bài viết tương đồng với cosine similarity
+\item \textbf{Performance}: Inference Processor giảm query time xuống 50ms
+\end{itemize}
+
+\subsubsection{Caching Strategy}
+\textbf{Cache-Aside Pattern:}
+Application quản lý cache manually, đọc từ cache trước, nếu cache miss thì query database và update cache.
+
+\textbf{Redis Data Structures:}
+\begin{itemize}
+\item \textbf{Strings}: Simple key-value pairs cho session data
+\item \textbf{Hashes}: Object-like structures cho user profiles
+\item \textbf{Lists}: Ordered collections cho recent activities
+\item \textbf{Sets}: Unordered unique collections cho followers/following
+\item \textbf{Sorted Sets}: Leaderboards và ranking features
+\end{itemize}
+
+\textbf{Cache Optimization:}
+\begin{itemize}
+\item \textbf{TTL Management}: Expire keys tự động (feed cache: 5 phút)
+\item \textbf{Cache Invalidation}: Xóa cache khi có data updates
+\item \textbf{Cache Warming}: Pre-load popular content vào cache
+\item \textbf{Memory Management}: Eviction policies (LRU, LFU)
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Feed Caching}: Cache user feeds để giảm database queries
+\item \textbf{Session Storage}: Store user sessions trong Redis
+\item \textbf{Rate Limiting}: Track API calls per user/IP
+\item \textbf{Popular Content}: Cache trending posts và popular hashtags
+\end{itemize}
+
+\subsubsection{Lazy Loading}
+\textbf{Khái niệm và implementation:}
+Lazy loading là kỹ thuật defer loading của resources cho đến khi thực sự cần thiết, giảm initial load time và bandwidth usage.
+
+\textbf{Implementation Techniques:}
+\begin{itemize}
+\item \textbf{Intersection Observer API}: Detect khi elements enter viewport
+\item \textbf{Pagination}: Load content theo chunks thay vì load all
+\item \textbf{Virtual Scrolling}: Render chỉ visible items trong long lists
+\item \textbf{Image Lazy Loading}: Load images khi scroll đến
+\end{itemize}
+
+\textbf{Ứng dụng trong Honey Social:}
+\begin{itemize}
+\item \textbf{Feed Posts}: Load 10 posts mỗi lần, load thêm khi scroll
+\item \textbf{Comment Loading}: Load comments on-demand khi expand
+\item \textbf{Image Loading}: Progressive image loading với placeholders
+\item \textbf{User Lists}: Lazy load followers/following lists
+\end{itemize}
+
+\subsection{Architecture Patterns}
+
+\subsubsection{Monolithic vs Microservices}
+\textbf{Current Monolithic Approach:}
+\begin{itemize}
+\item \textbf{Single Deployment Unit}: Toàn bộ application trong một codebase
+\item \textbf{Shared Database}: Tất cả modules sử dụng chung MongoDB instance
+\item \textbf{Internal Communication}: Function calls và shared memory
+\item \textbf{Pros}: Đơn giản deploy, testing, debugging
+\item \textbf{Cons}: Scaling limitations, technology lock-in
+\end{itemize}
+
+\textbf{Potential Microservices Evolution:}
+\begin{itemize}
+\item \textbf{User Service}: Authentication, profiles, relationships
+\item \textbf{Content Service}: Posts, comments, media handling
+\item \textbf{Notification Service}: Real-time notifications, email, push
+\item \textbf{Search Service}: Elasticsearch integration, recommendations
+\item \textbf{Analytics Service}: User behavior tracking, metrics
+\end{itemize}
+
+\subsubsection{Event-Driven Architecture}
+\textbf{Message Queue Integration:}
+Sử dụng RabbitMQ cho asynchronous communication và event processing.
+
+\textbf{Event Types:}
+\begin{itemize}
+\item \textbf{Domain Events}: UserRegistered, PostCreated, CommentAdded
+\item \textbf{Integration Events}: Cross-service communication
+\item \textbf{System Events}: ErrorOccurred, PerformanceMetric
+\end{itemize}
+
+\textbf{Benefits:}
+\begin{itemize}
+\item \textbf{Loose Coupling}: Services không phụ thuộc trực tiếp
+\item \textbf{Scalability}: Scale individual event processors
+\item \textbf{Reliability}: Message persistence và retry mechanisms
+\item \textbf{Auditability}: Event sourcing cho complete audit trail
+\end{itemize}
+
+\subsection{Tổng kết chương}
+Chương này đã trình bày cơ sở lý thuyết chi tiết của các công nghệ sử dụng trong hệ thống Honey Social. MERN Stack cung cấp foundation mạnh mẽ với MongoDB cho flexible data storage, Express.js cho robust API development, React.js cho interactive UI, và Node.js cho high-performance backend. Các công nghệ bổ trợ như JWT, Socket.IO, Cloudinary, Elasticsearch, và Redis giải quyết các yêu cầu chuyên biệt về security, real-time communication, media management, intelligent search, và performance optimization. Architecture patterns được áp dụng đảm bảo hệ thống có thể mở rộng và maintainable. Những kiến thức lý thuyết này tạo nền tảng cho việc triển khai thực tế được mô tả trong chương tiếp theo.
