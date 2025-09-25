@@ -1,131 +1,63 @@
 
 \newpage
 
-\section{\textbf{CHƯƠNG 1: TỔNG QUAN VỀ NICEPHIM }}
+\section{CHƯƠNG 1: TỔNG QUAN VỀ NICEPHIM }
 
-\subsection{Giới thiệu} 
+\subsection{Giới thiệu}
 
 NicePhim. là một nền tảng mang đến trải nghiệm xem phim trực tuyến, được thiết kế nhằm giúp người dùng và những người thân yêu có thể cùng nhau thưởng thức các tác phẩm điện ảnh, xóa bỏ mọi rào cản về địa lý. Nền tảng được phát triển dựa trên hai tính năng cốt lõi:
 
 \begin{itemize}
-\item \textbf{Xem Phim Chung (Watch Party):} Tính năng cho phép người dùng tạo các phòng chiếu phim riêng tư, nơi video được đồng bộ hóa một cách hoàn hảo cho tất cả thành viên. Điều này cho phép mọi người có thể cùng theo dõi và bình luận về một bộ phim dù ở bất kỳ đâu.
+	\item \textbf{Xem Phim Chung (Watch Party):} Tính năng cho phép người dùng tạo các phòng chiếu phim riêng tư, nơi video được đồng bộ hóa một cách hoàn hảo cho tất cả thành viên. Điều này cho phép mọi người có thể cùng theo dõi và bình luận về một bộ phim dù ở bất kỳ đâu.
 
-\item \textbf{Trò Chuyện Trực Tiếp (Live Chat):} Khung trò chuyện được tích hợp trực tiếp trong phòng chiếu, cho phép các thành viên chia sẻ cảm xúc và bình luận tức thì trong suốt quá trình xem phim. Tính năng này làm tăng tính tương tác và tạo cảm giác như đang cùng xem tại một địa điểm.
+	\item \textbf{Trò Chuyện Trực Tiếp (Live Chat):} Khung trò chuyện được tích hợp trực tiếp trong phòng chiếu, cho phép các thành viên chia sẻ cảm xúc và bình luận tức thì trong suốt quá trình xem phim. Tính năng này làm tăng tính tương tác và tạo cảm giác như đang cùng xem tại một địa điểm.
 \end{itemize}
 
 Mục tiêu của NicePhim là biến mỗi buổi xem phim thành một sự kiện kết nối trực tuyến, giúp gắn kết bạn bè và tạo ra những kỷ niệm đáng nhớ.
 
+% --- Tổng quan hệ thống ---
+
 \subsection{Tổng quan hệ thống}
-\subsubsection{Mục đích hệ thống}
-Mạng xã hội Honey được thiết kế để cung cấp một nền tảng kết nối cộng đồng, cho phép người dùng chia sẻ bài viết, tương tác (thích, bình luận), theo dõi lẫn nhau, và trò chuyện theo thời gian thực. Hệ thống tích hợp AI để cá nhân hóa nội dung, kiểm duyệt tự động, và hỗ trợ người dùng thông qua chatbot thông minh. Mục tiêu chính bao gồm:
+
+NicePhim được xây dựng với kiến trúc hiện đại, gồm ba thành phần chính:
 \begin{itemize}
-    \item Xây dựng một nền tảng mạng xã hội với giao diện thân thiện, responsive, hỗ trợ chế độ sáng/tối.
-    \item Tăng cường trải nghiệm người dùng thông qua gợi ý bài viết cá nhân hóa và tìm kiếm thông minh.
-    \item Đảm bảo an toàn nội dung bằng cách tích hợp OpenAI Moderation API để kiểm duyệt văn bản và hình ảnh.
-    \item Tối ưu hóa hiệu suất hệ thống với Redis caching, RabbitMQ, và Elasticsearch KNN.
+	\item \textbf{Frontend:} Sử dụng Next.js 15, React 19, TypeScript và Tailwind CSS, đảm bảo giao diện hiện đại, responsive, trải nghiệm người dùng mượt mà trên mọi thiết bị.
+	\item \textbf{Backend:} Phát triển bằng Spring Boot 3.1.5 (Java 17), cung cấp API, xử lý logic nghiệp vụ, xác thực người dùng, quản lý phim, thể loại, và đồng bộ dữ liệu thời gian thực qua WebSocket (STOMP).
+	\item \textbf{Database:} Lưu trữ dữ liệu trên Microsoft SQL Server, sử dụng Flyway để quản lý migration, đảm bảo tính nhất quán và mở rộng.
 \end{itemize}
 
-Hệ thống không nhằm cạnh tranh với các nền tảng lớn như Facebook hay Instagram, mà tập trung vào việc cung cấp một giải pháp mạng xã hội quy mô vừa phải, ứng dụng công nghệ hiện đại để giải quyết các vấn đề về nội dung, bảo mật, và trải nghiệm người dùng.
+Hệ thống hỗ trợ streaming video chất lượng cao (360p, 480p, 720p, 1080p, 4K) với phụ đề, quản lý tập phim, lịch sử xem, yêu thích, và các tính năng xã hội như bình luận, đánh giá. Tính năng “Xem chung” sử dụng WebSocket để đồng bộ phát video giữa các thành viên trong phòng.
 
-\subsubsection{Khảo sát các sản phẩm tương tự}
-Các nền tảng mạng xã hội hiện tại như Threads, Instagram, và Twitter đã đạt được nhiều thành công, nhưng vẫn tồn tại một số hạn chế:
-\begin{itemize}
-    \item \textbf{Threads (Meta)}: Tối ưu hóa tương tác nhanh với nội dung dạng văn bản, hình ảnh, và video, nhưng thiếu các tính năng cá nhân hóa thông minh và kiểm duyệt tự động hiệu quả.
-    \item \textbf{Instagram}: Tập trung vào hình ảnh và video, nhưng các gợi ý nội dung đôi khi thiếu chính xác và không hỗ trợ chatbot thông minh.
-    \item \textbf{Twitter}: Hỗ trợ chia sẻ nhanh chóng, nhưng gặp vấn đề về nội dung độc hại và kiểm duyệt thủ công tốn kém.
-\end{itemize}
-
-Dựa trên khảo sát, Honey Social đề xuất các cải tiến:
-\begin{itemize}
-    \item Tích hợp OpenAI Moderation API để tự động kiểm duyệt nội dung.
-    \item Sử dụng vector embeddings và Elasticsearch KNN để gợi ý bài viết cá nhân hóa.
-    \item Triển khai chatbot AI hỗ trợ người dùng tương tác và báo cáo nội dung vi phạm.
-\end{itemize}
-
-\subsubsection{Yêu cầu hoạt động của ứng dụng}
-\subsubsubsection{Phần dành cho người dùng cuối}
-Người dùng cuối (end-user) có thể thực hiện các chức năng sau:
-\begin{itemize}
-    \item \textbf{Đăng ký và đăng nhập}: Tạo tài khoản với xác thực email qua Resend API, đăng nhập an toàn bằng JWT.
-    \item \textbf{Quản lý hồ sơ}: Cập nhật thông tin cá nhân, ảnh đại diện (lưu trữ trên Cloudinary), và xem hồ sơ của người dùng khác.
-    \item \textbf{Đăng bài viết}: Tạo bài viết với văn bản và hình ảnh, chia sẻ liên kết bài viết.
-    \item \textbf{Tương tác bài viết}: Thích, bình luận, và phản hồi bình luận.
-    \item \textbf{Xem bảng tin}: Hiển thị bài viết từ người dùng đang theo dõi và gợi ý bài viết dựa trên sở thích.
-    \item \textbf{Tìm kiếm nâng cao}: Sử dụng Elasticsearch để tìm kiếm bài viết với fuzzy matching và gợi ý vector.
-    \item \textbf{Trò chuyện AI}: Tương tác với chatbot AI để nhận hỗ trợ hoặc gợi ý nội dung.
-    \item \textbf{Báo cáo bài viết}: Gửi báo cáo về nội dung vi phạm với lý do cụ thể.
-    \item \textbf{Thông báo}: Nhận thông báo thời gian thực về tương tác (thích, bình luận) qua Socket.IO.
-\end{itemize}
-
-\subsubsubsection{Phần dành cho người quản trị}
-Quản trị viên (admin) có các chức năng:
-\begin{itemize}
-    \item \textbf{Quản lý người dùng}: Xem, chỉnh sửa, hoặc khóa tài khoản người dùng.
-    \item \textbf{Quản lý nội dung báo cáo}: Xem xét và xử lý báo cáo vi phạm (xóa bài viết, khóa tài khoản, hoặc bỏ qua).
-    \item \textbf{Phân loại vi phạm}: Đánh giá mức độ vi phạm (nhẹ, vừa, nặng) để đưa ra hành động phù hợp.
-    \item \textbf{Giao diện quản trị}: Sử dụng admin dashboard để quản lý báo cáo, tìm kiếm và lọc theo thời gian hoặc mức độ vi phạm.
-\end{itemize}
+% --- Thiết kế tương tác ---
 
 \subsection{Thiết kế tương tác}
-Hệ thống Honey Social được thiết kế với giao diện thân thiện, responsive, hoạt động tốt trên cả desktop và mobile. Giao diện hỗ trợ chế độ sáng/tối để tối ưu trải nghiệm người dùng. Các thành phần chính bao gồm:
+
+Giao diện NicePhim được thiết kế theo hướng hiện đại, lấy người dùng làm trung tâm:
 \begin{itemize}
-    \item \textbf{Trang chủ/Bảng tin}: Hiển thị bài viết từ người dùng đang theo dõi và bài viết gợi ý, sử dụng lazy loading để tối ưu tốc độ tải.
-    \item \textbf{Hồ sơ người dùng}: Hiển thị thông tin cá nhân, bài viết, số lượng người theo dõi/đang theo dõi, và các nút tương tác (theo dõi, nhắn tin).
-    \item \textbf{Giao diện chat}: Hỗ trợ trò chuyện thời gian thực với người dùng khác và chatbot AI, tích hợp Socket.IO.
-    \item \textbf{Admin dashboard}: Cung cấp bảng điều khiển để quản lý báo cáo và người dùng, với khả năng tìm kiếm và lọc dữ liệu.
+	\item \textbf{Đăng ký/Đăng nhập:} Quy trình đơn giản, xác thực qua email hoặc tên người dùng, bảo mật bằng BCrypt.
+	\item \textbf{Khám phá nội dung:} Người dùng có thể tìm kiếm, lọc phim theo thể loại, năm, đánh giá, hoặc nhận đề xuất cá nhân hóa.
+	\item \textbf{Xem phim:} Trình phát video hỗ trợ chọn chất lượng, phụ đề, tua nhanh/chậm, toàn màn hình, và ghi nhớ tiến trình xem.
+	\item \textbf{Xem chung:} Tạo/join phòng, đồng bộ phát video, trò chuyện trực tiếp, quản lý thành viên phòng.
+	\item \textbf{Quản trị viên:} Giao diện riêng để quản lý phim, thể loại, kiểm duyệt nội dung.
 \end{itemize}
+
+Thiết kế hướng tới trải nghiệm liền mạch, tối ưu thao tác, hỗ trợ tốt trên cả máy tính và thiết bị di động.
+
+% --- Phương pháp tiếp cận và giải quyết vấn đề ---
 
 \subsection{Phương pháp tiếp cận và giải quyết vấn đề}
-\subsubsection{Mô hình tổng quát hệ thống}
-Hệ thống Honey Social được xây dựng dựa trên kiến trúc MERN Stack, kết hợp với các công nghệ bổ trợ như OpenAI API, Cloudinary, Redis, và RabbitMQ. Mô hình tổng quát bao gồm:
+
+Dự án áp dụng các phương pháp và công nghệ hiện đại để giải quyết các thách thức:
 \begin{itemize}
-    \item \textbf{Client-side}: React.js quản lý giao diện, Socket.IO xử lý tương tác thời gian thực.
-    \item \textbf{Server-side}: Node.js và Express.js xử lý API, tích hợp RabbitMQ cho tác vụ bất đồng bộ và Redis cho caching.
-    \item \textbf{Cơ sở dữ liệu}: MongoDB lưu trữ dữ liệu người dùng, bài viết, tin nhắn, và báo cáo.
-    \item \textbf{Bên thứ ba}: OpenAI API (kiểm duyệt và chatbot), Cloudinary (lưu trữ media), Resend API (gửi email xác thực).
+	\item \textbf{Streaming mượt mà:} Sử dụng FFmpeg chuyển đổi video sang HLS đa chất lượng, tích hợp HLS.js trên frontend để tự động chọn chất lượng phù hợp.
+	\item \textbf{Đồng bộ thời gian thực:} WebSocket (STOMP) đảm bảo mọi thành viên trong phòng xem chung luôn đồng bộ trạng thái phát video.
+	\item \textbf{Bảo mật:} Xác thực người dùng với BCrypt, kiểm soát truy cập API, chống SQL injection, xác thực đầu vào.
+	\item \textbf{Quản lý dữ liệu:} Sử dụng UUID cho khóa chính, migration Flyway, thiết kế database chuẩn hóa, hỗ trợ mở rộng.
+	\item \textbf{Tối ưu trải nghiệm:} Giao diện responsive, tối ưu hiệu năng, phân biệt cảnh báo/lỗi rõ ràng, hỗ trợ đa nền tảng.
 \end{itemize}
 
-\subsubsection{Phương pháp xây dựng phần mềm}
-Dự án áp dụng phương pháp phát triển phần mềm Agile, với các giai đoạn:
-\begin{itemize}
-    \item Phân tích yêu cầu: Xác định các chức năng chính và công nghệ sử dụng.
-    \item Thiết kế hệ thống: Xây dựng kiến trúc MERN Stack, thiết kế cơ sở dữ liệu, và tích hợp AI.
-    \item Phát triển: Triển khai từng module (quản lý người dùng, bài viết, chat, kiểm duyệt).
-    \item Triển khai: Đưa hệ thống lên AWS EC2.
-\end{itemize}
-
-\subsubsection{Kiến trúc phần mềm}
-Hệ thống sử dụng kiến trúc RESTful API với MERN Stack:
-\begin{itemize}
-    \item \textbf{Frontend}: React.js với component-based architecture, sử dụng Virtual DOM để render nhanh.
-    \item \textbf{Backend}: Express.js quản lý routing và middleware, tích hợp JWT cho xác thực.
-    \item \textbf{Database}: MongoDB với schema linh hoạt, hỗ trợ index trên userId để tối ưu truy vấn.
-\end{itemize}
-
-\subsubsection{Công nghệ triển khai hệ thống}
-\subsubsubsection{Server-Side}
-\begin{itemize}
-    \item \textbf{MongoDB}: Cơ sở dữ liệu NoSQL lưu trữ dữ liệu dạng JSON/BSON, quản lý người dùng, bài viết, tin nhắn, và báo cáo. Sử dụng MongoDB Atlas trên AWS để đảm bảo khả năng mở rộng.
-    \item \textbf{Node.js}: Môi trường chạy JavaScript server-side, xử lý đồng thời nhiều kết nối với mô hình bất đồng bộ.
-    \item \textbf{Express.js}: Framework nhẹ, hỗ trợ xây dựng API RESTful, quản lý routing và middleware.
-    \item \textbf{RabbitMQ}: Xử lý tác vụ bất đồng bộ, như xếp hàng kiểm duyệt nội dung.
-    \item \textbf{Redis}: Caching dữ liệu (Cache-Aside) để giảm tải cơ sở dữ liệu, tối ưu API GetFeedPosts.
-\end{itemize}
-
-\subsubsubsection{Client-Side}
-\begin{itemize}
-    \item \textbf{React.js}: Thư viện frontend xây dựng giao diện responsive, sử dụng component tái sử dụng và Virtual DOM.
-    \item \textbf{Socket.IO}: Hỗ trợ chat và thông báo thời gian thực, sử dụng WebSocket để giảm độ trễ.
-    \item \textbf{Cloudinary}: Lưu trữ và tối ưu hóa hình ảnh (avatar, bài viết), tự động nén sang WebP và điều chỉnh kích thước.
-\end{itemize}
-
-\subsubsubsection{Công nghệ bổ trợ}
-\begin{itemize}
-    \item \textbf{JWT}: Xác thực người dùng với token mã hóa, đảm bảo an toàn phiên đăng nhập.
-    \item \textbf{Elasticsearch}: Hỗ trợ tìm kiếm nâng cao và gợi ý bài viết bằng vector search (KNN).
-    \item \textbf{OpenAI API}: Kiểm duyệt nội dung (Moderation API) và cung cấp chatbot thông minh.
-    \item \textbf{Resend API}: Gửi email xác thực tài khoản.
-\end{itemize}
+% --- Tổng kết chương ---
 
 \subsection{Tổng kết chương}
-Chương này đã trình bày tổng quan về hệ thống mạng xã hội Honey, bao gồm mục đích, khảo sát các sản phẩm tương tự, yêu cầu chức năng, thiết kế tương tác, và phương pháp triển khai. Hệ thống sử dụng MERN Stack kết hợp với các công nghệ AI hiện đại để mang lại trải nghiệm an toàn, thông minh, và hiệu quả. Chương tiếp theo sẽ đi sâu vào cơ sở lý thuyết của các công nghệ được sử dụng, bao gồm MERN Stack, JWT, Socket.IO, và OpenAI API.
+
+Chương này đã trình bày tổng quan về nền tảng NicePhim, bao gồm mục tiêu, kiến trúc hệ thống, thiết kế tương tác và các phương pháp tiếp cận kỹ thuật. Những nền tảng này là cơ sở để phát triển các chức năng chi tiết ở các chương tiếp theo.
