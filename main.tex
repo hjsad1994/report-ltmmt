@@ -24,6 +24,17 @@
 \usepackage{pdflscape}
 \usepackage{everypage}
 \usepackage{titlesec}
+
+% ----- GEMINI'S DEFINITIVE SECTION FORMATTING -----
+% Goal: No number for sections, but keep numbering for subsections (1, 2, 3...).
+\setcounter{secnumdepth}{3} % Make sure numbering is active down to subsubsections.
+\titleformat{\section}
+  {\normalfont\Large\bfseries} % format
+  {} % label (empty for no number)
+  {0em} % sep
+  {}
+\renewcommand{\thesubsection}{\arabic{subsection}} % subsection numbering style
+% ----- END OF GEMINI'S FORMATTING -----
 \usepackage{tocloft} % Để tùy chỉnh mục lục
 \usepackage{fontspec} % XeLaTeX/LuaLaTeX
 % \usepackage[T5]{fontenc} % not needed with XeLaTeX
@@ -103,12 +114,14 @@
 % \usepackage[left=3cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 %\usepackage{fancyhdr}
 
+\begin{comment}
 % Numbering for section, subsection, etc.
-\renewcommand{\thesection}{\arabic{section}}
-\titlespacing{\section}{2pt}{0pt}{2pt}
-\titleformat{\section}{\bfseries\large}{\thesection.}{0.5em}{}
+% Section numbers are disabled by providing an empty label in titleformat.
+% Subsection numbering is enabled and set to a simple arabic counter.
+\titleformat{\section}{\bfseries\large}{}{0em}{}
 \renewcommand{\thesubsection}{\arabic{subsection}}
 \titleformat{\subsection}{\bfseries\large}{\thesubsection.}{0.5em}{}
+\end{comment}
 
 % subsubsbusection
 \titleclass{\subsubsubsection}{straight}[\subsection]
@@ -139,7 +152,7 @@
 \def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
 \makeatother
 
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{2}
 \setcounter{tocdepth}{4}
 
 
@@ -198,9 +211,8 @@
 
 
 
-
 \begin{document}
- \pagenumbering{gobble}
+\pagenumbering{gobble}
 % \captionsetup{justification=centering}
 
 \captionsetup[figure]{labelformat=simple, labelsep=period}
@@ -217,16 +229,9 @@
 % \newpage
 \listoffigures
 \newpage
-% \setcounter{secnumdepth}{0} % Tắt đánh số section
-\listoftables
-\clearpage
-
-\setcounter{secnumdepth}{9} % Đảm bảo đánh số cho các cấp thấp hơn
-
-\pagenumbering{arabic}
-\input{components/project_info}
 \input{components/Section-I/main}
 \input{components/Section-II/main}
+% \setcounter{secnumdepth}{9}
 \input{components/Section-III/main}
 \input{components/Section-IV/main}
 \input{components/Section-V/main}
