@@ -1,63 +1,55 @@
-
 \newpage
 
-\section{CHƯƠNG 1: TỔNG QUAN VỀ NICEPHIM }
+\section{CHƯƠNG 1: TỔNG QUAN VỀ NICEPHIM}
 
 \subsection{Giới thiệu}
 
-NicePhim. là một nền tảng mang đến trải nghiệm xem phim trực tuyến, được thiết kế nhằm giúp người dùng và những người thân yêu có thể cùng nhau thưởng thức các tác phẩm điện ảnh, xóa bỏ mọi rào cản về địa lý. Nền tảng được phát triển dựa trên hai tính năng cốt lõi:
+NicePhim là một nền tảng xem phim trực tuyến hiện đại, được thiết kế nhằm mang đến trải nghiệm giải trí chất lượng cao với khả năng kết nối và chia sẻ cùng bạn bè, gia đình dù ở bất kỳ đâu. Hệ thống tập trung vào ba tính năng chính:
 
 \begin{itemize}
-	\item \textbf{Xem Phim Chung (Watch Party):} Tính năng cho phép người dùng tạo các phòng chiếu phim riêng tư, nơi video được đồng bộ hóa một cách hoàn hảo cho tất cả thành viên. Điều này cho phép mọi người có thể cùng theo dõi và bình luận về một bộ phim dù ở bất kỳ đâu.
+	\item \textbf{Streaming Video Chất Lượng Cao:} Hỗ trợ phát video với công nghệ HLS (HTTP Live Streaming), tự động điều chỉnh chất lượng phù hợp với băng thông mạng của người dùng. Cung cấp 5 mức chất lượng từ 360p đến 4K (360p, 720p, 1080p, 2K, 4K), cho phép người dùng chủ động lựa chọn hoặc để hệ thống tự động điều chỉnh.
 
-	\item \textbf{Trò Chuyện Trực Tiếp (Live Chat):} Khung trò chuyện được tích hợp trực tiếp trong phòng chiếu, cho phép các thành viên chia sẻ cảm xúc và bình luận tức thì trong suốt quá trình xem phim. Tính năng này làm tăng tính tương tác và tạo cảm giác như đang cùng xem tại một địa điểm.
+	\item \textbf{Xem Phim Chung (Watch Together):} Tính năng cho phép người dùng tạo phòng xem chung, mời bạn bè tham gia và cùng xem phim đồng bộ thời gian thực thông qua công nghệ WebSocket. Mỗi phòng có mã mời riêng, hỗ trợ tự động phát hiện chủ phòng và cho phép mọi thành viên điều khiển video (play, pause, seek) một cách linh hoạt.
+
+	\item \textbf{Chat Trực Tiếp:} Tích hợp hệ thống chat thời gian thực trong phòng xem chung, sử dụng WebSocket để đảm bảo tin nhắn được gửi và nhận tức thì. Tên người dùng được tự động lấy từ tài khoản đã đăng nhập, giúp trải nghiệm giao tiếp mượt mà và tự nhiên.
 \end{itemize}
 
-Mục tiêu của NicePhim là biến mỗi buổi xem phim thành một sự kiện kết nối trực tuyến, giúp gắn kết bạn bè và tạo ra những kỷ niệm đáng nhớ.
-
-% --- Tổng quan hệ thống ---
+Mục tiêu của NicePhim là tạo ra một nền tảng streaming hoàn chỉnh, kết hợp giữa chất lượng video cao và khả năng tương tác xã hội, biến mỗi buổi xem phim thành trải nghiệm giải trí đáng nhớ.
 
 \subsection{Tổng quan hệ thống}
 
-NicePhim được xây dựng với kiến trúc hiện đại, gồm ba thành phần chính:
+NicePhim được xây dựng với kiến trúc Layer Architecture hiện đại, phân tách rõ ràng thành các thành phần:
+
+\textbf{Kiến trúc hệ thống:}
 \begin{itemize}
-	\item \textbf{Frontend:} Sử dụng Next.js 15, React 19, TypeScript và Tailwind CSS, đảm bảo giao diện hiện đại, responsive, trải nghiệm người dùng mượt mà trên mọi thiết bị.
-	\item \textbf{Backend:} Phát triển bằng Spring Boot 3.1.5 (Java 17), cung cấp API, xử lý logic nghiệp vụ, xác thực người dùng, quản lý phim, thể loại, và đồng bộ dữ liệu thời gian thực qua WebSocket (STOMP).
-	\item \textbf{Database:} Lưu trữ dữ liệu trên Microsoft SQL Server, sử dụng Flyway để quản lý migration, đảm bảo tính nhất quán và mở rộng.
+	\item \textbf{Frontend (Presentation Layer):} Phát triển với Next.js 15, React 19, TypeScript và Tailwind CSS 4. Giao diện được thiết kế responsive với chủ đề tối (dark theme) tối ưu cho trải nghiệm xem phim, sử dụng hiệu ứng glass-morphism và animations hiện đại. Tổng cộng 45 file TypeScript/React components.
+
+	\item \textbf{Backend (Controller, Service, Repository Layers):} Xây dựng trên nền tảng Spring Boot 3.1.5 với Java 17, theo mô hình MVC với 40 file Java. Cung cấp RESTful API cho quản lý phim, thể loại, người dùng, và phòng xem chung. Xử lý logic nghiệp vụ, xác thực BCrypt, và tích hợp WebSocket (STOMP protocol) cho tính năng realtime.
+
+	\item \textbf{Database (Data Layer):} Microsoft SQL Server với 6 bảng chính: users, movies, genres, movie\_genres (junction table), watch\_rooms, và flyway\_schema\_history. Sử dụng UUID làm khóa chính, quản lý migration tự động qua Flyway (7 versions), đảm bảo tính toàn vẹn dữ liệu và khả năng mở rộng.
+
+	\item \textbf{Video Processing:} Hệ thống xử lý video với FFmpeg, tự động chuyển đổi video upload thành định dạng HLS với 5 mức chất lượng (360p, 720p, 1080p, 2K/1440p, 4K/2160p). Hỗ trợ upload file lên đến 5GB với timeout 600 giây. Video được lưu trữ dưới dạng segments (.ts files) và manifest files (.m3u8).
 \end{itemize}
 
-Hệ thống hỗ trợ streaming video chất lượng cao (360p, 480p, 720p, 1080p, 4K) với phụ đề, quản lý tập phim, lịch sử xem, yêu thích, và các tính năng xã hội như bình luận, đánh giá. Tính năng “Xem chung” sử dụng WebSocket để đồng bộ phát video giữa các thành viên trong phòng.
-
-% --- Thiết kế tương tác ---
-
-\subsection{Thiết kế tương tác}
-
-Giao diện NicePhim được thiết kế theo hướng hiện đại, lấy người dùng làm trung tâm:
+\textbf{Tính năng chính đã triển khai:}
 \begin{itemize}
-	\item \textbf{Đăng ký/Đăng nhập:} Quy trình đơn giản, xác thực qua email hoặc tên người dùng, bảo mật bằng BCrypt.
-	\item \textbf{Khám phá nội dung:} Người dùng có thể tìm kiếm, lọc phim theo thể loại, năm, đánh giá, hoặc nhận đề xuất cá nhân hóa.
-	\item \textbf{Xem phim:} Trình phát video hỗ trợ chọn chất lượng, phụ đề, tua nhanh/chậm, toàn màn hình, và ghi nhớ tiến trình xem.
-	\item \textbf{Xem chung:} Tạo/join phòng, đồng bộ phát video, trò chuyện trực tiếp, quản lý thành viên phòng.
-	\item \textbf{Quản trị viên:} Giao diện riêng để quản lý phim, thể loại, kiểm duyệt nội dung.
+	\item Streaming video HLS với adaptive bitrate (tự động hoặc chọn thủ công)
+	\item Video player tùy chỉnh (SimpleHLSPlayer) với đầy đủ controls: play/pause, seek, volume, quality selector, speed control, fullscreen
+	\item Tạo và quản lý phòng xem chung với mã mời duy nhất
+	\item Đồng bộ video realtime qua WebSocket giữa các thành viên
+	\item Chat trực tiếp trong phòng với username tự động từ tài khoản
+	\item Đăng ký/Đăng nhập với mã hóa BCrypt
+	\item Quản lý phim và thể loại (CRUD) qua admin panel
+	\item Upload video và hình ảnh (poster, banner) cho phim
+	\item Tìm kiếm và lọc phim theo thể loại
+	\item Giao diện responsive tối ưu cho mobile và desktop
 \end{itemize}
 
-Thiết kế hướng tới trải nghiệm liền mạch, tối ưu thao tác, hỗ trợ tốt trên cả máy tính và thiết bị di động.
 
-% --- Phương pháp tiếp cận và giải quyết vấn đề ---
 
-\subsection{Phương pháp tiếp cận và giải quyết vấn đề}
-
-Dự án áp dụng các phương pháp và công nghệ hiện đại để giải quyết các thách thức:
-\begin{itemize}
-	\item \textbf{Streaming mượt mà:} Sử dụng FFmpeg chuyển đổi video sang HLS đa chất lượng, tích hợp HLS.js trên frontend để tự động chọn chất lượng phù hợp.
-	\item \textbf{Đồng bộ thời gian thực:} WebSocket (STOMP) đảm bảo mọi thành viên trong phòng xem chung luôn đồng bộ trạng thái phát video.
-	\item \textbf{Bảo mật:} Xác thực người dùng với BCrypt, kiểm soát truy cập API, chống SQL injection, xác thực đầu vào.
-	\item \textbf{Quản lý dữ liệu:} Sử dụng UUID cho khóa chính, migration Flyway, thiết kế database chuẩn hóa, hỗ trợ mở rộng.
-	\item \textbf{Tối ưu trải nghiệm:} Giao diện responsive, tối ưu hiệu năng, phân biệt cảnh báo/lỗi rõ ràng, hỗ trợ đa nền tảng.
-\end{itemize}
-
-% --- Tổng kết chương ---
 
 \subsection{Tổng kết chương}
 
-Chương này đã trình bày tổng quan về nền tảng NicePhim, bao gồm mục tiêu, kiến trúc hệ thống, thiết kế tương tác và các phương pháp tiếp cận kỹ thuật. Những nền tảng này là cơ sở để phát triển các chức năng chi tiết ở các chương tiếp theo.
+Chương này đã trình bày tổng quan về nền tảng NicePhim, bao gồm mục tiêu xây dựng hệ thống streaming video chất lượng cao với tính năng xem chung độc đáo. Kiến trúc Layer Architecture được áp dụng một cách nhất quán từ frontend đến backend, kết hợp công nghệ hiện đại như HLS, WebSocket, FFmpeg để tạo nên trải nghiệm streaming mượt mà và tương tác realtime.
+
+Hệ thống đã triển khai đầy đủ các tính năng cốt lõi: streaming đa chất lượng với adaptive bitrate, video player tùy chỉnh hoàn chỉnh, phòng xem chung với đồng bộ realtime, chat trực tiếp, và admin panel quản lý nội dung. Thiết kế tập trung vào tính đơn giản, trực quan và mượt mà, đảm bảo người dùng có thể dễ dàng sử dụng mọi tính năng mà không cần hướng dẫn phức tạp. Những nền tảng này là cơ sở vững chắc để phát triển và mở rộng các chức năng nâng cao trong tương lai.

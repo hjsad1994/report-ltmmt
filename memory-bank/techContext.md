@@ -1,53 +1,68 @@
 # Technical Context: NicePhim Platform
 
 ## Architecture Overview
-- **Frontend**: Next.js 15 with App Router
-- **Backend**: Spring Boot 3.1.5 with Java 17
+- **Frontend**: Next.js 15 with App Router (45 TypeScript/React files)
+- **Backend**: Spring Boot 3.1.5 with Java 17 (40 Java files)
 - **Database**: Microsoft SQL Server with Flyway migrations
 - **Real-time**: WebSocket with STOMP protocol
-- **Video Processing**: FFmpeg for HLS conversion
+- **Video Processing**: FFmpeg for HLS conversion with multiple quality variants
 
 ## Frontend Stack
-- **Framework**: Next.js 15.5.2 with React 19.1.0
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 4
-- **UI Components**: Headless UI, Heroicons
-- **State Management**: React hooks and context
-- **Video Player**: React Player, HLS.js for adaptive streaming
+- **Framework**: Next.js 15.5.2 with React 19.1.0 and App Router
+- **Language**: TypeScript 5 with comprehensive type definitions
+- **Styling**: Tailwind CSS 4 with glass-morphism effects and animations
+- **UI Components**: Headless UI, Heroicons, custom React components
+- **State Management**: React hooks with local state and API integration
+- **Video Player**: React Player, HLS.js for adaptive streaming, custom SimpleHLSPlayer
+- **Broadcast Scheduling UI**: Time selection interfaces with countdown displays and status indicators
+- **Real-time Updates**: WebSocket integration for broadcast state synchronization
+- **Image Handling**: Next.js Image component with external domain configuration
 
 ## Backend Stack
-- **Framework**: Spring Boot 3.1.5
-- **Language**: Java 17
-- **Database**: SQL Server with JDBC
-- **Security**: Spring Security with BCrypt
-- **Validation**: Jakarta Validation
-- **Migration**: Flyway 9.16.0
-- **WebSocket**: Spring WebSocket with STOMP
-- **Authentication**: Complete login/register system
-- **Password Security**: BCrypt hashing with salt
+- **Framework**: Spring Boot 3.1.5 with MVC architecture
+- **Language**: Java 17 with modern features
+- **Database**: SQL Server with JDBC and JdbcTemplate
+- **Security**: BCrypt password hashing with validation
+- **Validation**: Jakarta Validation with Vietnamese error messages
+- **Migration**: Flyway 9.16.0 for database schema management
+- **WebSocket**: Spring WebSocket with STOMP protocol
+- **Broadcast Scheduling**: Server-managed time synchronization with room state management
+- **Time Calculation**: Server-side algorithms for synchronized playback position calculation
+- **Architecture**: Controllers, Services, Repositories, DTOs with proper separation
+- **Error Handling**: Comprehensive exception handling with HTTP responses
+- **Data Access**: Manual SQL queries with JdbcTemplate for performance
 
-## Database Schema
-- **Users**: Authentication and profile data
+## Database Schema (Simplified - V7)
+- **Users**: Authentication and profile data (UUID primary key)
 - **Movies**: Content metadata and relationships (includes video_id, hls_url, video_status fields)
-- **Genres**: Movie categorization system
-- **Movie_Genres**: Many-to-many relationship between movies and genres
-- **Episodes**: Series episode management
-- **Assets**: Video file storage references
-- **Watch Rooms**: Collaborative viewing sessions
-- **Comments**: User interactions and feedback
-- **Video Renditions**: HLS streaming quality variants
-- **Video Player Components**: SimpleHLSPlayer, HLSVideoPlayer, VideoPlayer wrapper
-- **Project Structure**: nicephim-frontend (renamed from rophim-frontend), nicephim-backend
+- **Genres**: Movie categorization system (UUID primary key)
+- **Movie_Genres**: Many-to-many junction table for movie-genre relationships
+- **Watch Rooms**: Collaborative viewing sessions (simplified - no broadcast scheduling, no private rooms)
+- **Flyway Schema History**: Migration tracking (system table)
+
+**Removed Tables (V7 Migration):**
+- ❌ Episodes (series support not implemented)
+- ❌ Video_Renditions (HLS variants generated dynamically, not stored)
+- ❌ Assets (original file tracking not needed)
+- ❌ Comments (comment system not implemented)
+- ❌ Comment_Reactions (reaction feature not implemented)
+- ❌ User_Favorites (favorites feature not implemented)
+- ❌ Watch_Room_Members (tracked in-memory via WatchRoomService)
+- ❌ Watch_Room_Messages (chat is real-time only, not persisted)
+- ❌ Watch_Room_Events (event logging not implemented)
+- ❌ Watch_Room_Control_Delegations (advanced permissions not needed)
 
 ## Development Environment
-- **Database**: SQL Server on KARIU:1435
+- **Database**: SQL Server on localhost:1433 (Docker container)
 - **Media Storage**: Local file system (D:/videos_demo, D:/media)
-- **FFmpeg**: C:/ProgramData/chocolatey/bin/ffmpeg.exe
+- **FFmpeg**: Configurable path via MEDIA_FFMPEG_PATH environment variable
 - **CORS**: Configured for cross-origin requests
-- **Upload Limits**: Spring Boot configured for 500MB file uploads
-- **Video Processing**: FFmpeg creating HLS streams with multiple quality variants
-- **Video Player Libraries**: hls.js for adaptive streaming, @types/hls.js for TypeScript support
+- **Upload Limits**: Spring Boot configured for **5GB file uploads** (10x increase from 500MB)
+- **Upload Timeout**: 600 seconds (10 minutes) for large file processing
+- **Video Processing**: FFmpeg creating HLS streams with 5 quality variants (4K, 2K, 1080p, 720p, 360p)
+- **Video Player Libraries**: hls.js 1.6.12 for adaptive streaming, @types/hls.js for TypeScript support
 - **Environment Configuration**: .env file support for flexible directory URL management without source code modifications
+- **Docker**: SQL Server 2022 running in Docker container with persistent volume
 
 ## Key Dependencies
 - Spring Boot Web, WebSocket, Security
@@ -59,6 +74,10 @@
 - Spring JDBC for database operations
 - hls.js for adaptive video streaming
 - @types/hls.js for TypeScript support
+- STOMP WebSocket client for real-time communication
+- SockJS for WebSocket fallback support
+- Server-side time synchronization algorithms
+- Broadcast state management services
 
 ## Authentication System
 - **Registration**: Complete with validation and error handling
