@@ -24,17 +24,6 @@
 \usepackage{pdflscape}
 \usepackage{everypage}
 \usepackage{titlesec}
-
-% ----- GEMINI'S DEFINITIVE SECTION FORMATTING -----
-% Goal: No number for sections, but keep numbering for subsections (1, 2, 3...).
-\setcounter{secnumdepth}{3} % Make sure numbering is active down to subsubsections.
-\titleformat{\section}
-  {\normalfont\Large\bfseries} % format
-  {} % label (empty for no number)
-  {0em} % sep
-  {}
-\renewcommand{\thesubsection}{\arabic{subsection}} % subsection numbering style
-% ----- END OF GEMINI'S FORMATTING -----
 \usepackage{tocloft} % Để tùy chỉnh mục lục
 \usepackage{fontspec} % XeLaTeX/LuaLaTeX
 % \usepackage[T5]{fontenc} % not needed with XeLaTeX
@@ -50,6 +39,9 @@
 % \usepackage{algcompatible}
 % \usepackage{adjustbox} % duplicate; keep [export] variant below
 \setmainfont{Arial}
+% Math font separate from main (avoid Arial in equations)
+\usepackage{unicode-math}
+\setmathfont{texgyretermes-math.otf}
 % \usepackage{newtxtext,newtxmath} % not used with Arial/XeLaTeX
 % \usepackage{hyperref} % duplicate; kept once below with setup
 \usepackage{tabularx}
@@ -114,14 +106,17 @@
 % \usepackage[left=3cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 %\usepackage{fancyhdr}
 
-\begin{comment}
 % Numbering for section, subsection, etc.
-% Section numbers are disabled by providing an empty label in titleformat.
-% Subsection numbering is enabled and set to a simple arabic counter.
-\titleformat{\section}{\bfseries\large}{}{0em}{}
+\renewcommand{\thesection}{\arabic{section}}
+% Section spacing and label formatting (tighter label gap)
+\titlespacing{\section}{0pt}{*1.6}{0.3em}
+% Show "Chương <số>. <Tiêu đề>" with moderate separation
+\titleformat{\section}{\bfseries\large}{Chương\ \thesection.}{0.35em}{}
 \renewcommand{\thesubsection}{\arabic{subsection}}
-\titleformat{\subsection}{\bfseries\large}{\thesubsection.}{0.5em}{}
-\end{comment}
+% Giảm khoảng cách giữa số và tiêu đề cho các cấp mục nhỏ
+% Thu hẹp tối đa khoảng cách sau số mục
+\titleformat{\subsection}{\bfseries\large}{\thesubsection.}{0em}{}
+\titleformat{\subsubsection}{\bfseries\normalsize}{\thesubsubsection.}{0em}{}
 
 % subsubsbusection
 \titleclass{\subsubsubsection}{straight}[\subsection]
@@ -131,7 +126,7 @@
 \renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
 
 \titleformat{\subsubsubsection}
-  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{0em}{}
 \titlespacing*{\subsubsubsection}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
@@ -147,13 +142,28 @@
 \def\toclevel@subsubsubsection{4}
 \def\toclevel@paragraph{5}
 \def\toclevel@paragraph{6}
-\def\l@subsubsubsection{\@dottedtocline{4}{7em}{4em}}
+% Tighten ToC spacing for custom subsubsubsection level
+\def\l@subsubsubsection{\@dottedtocline{4}{3.8em}{2.6em}}
 \def\l@paragraph{\@dottedtocline{5}{10em}{5em}}
 \def\l@subparagraph{\@dottedtocline{6}{14em}{6em}}
 \makeatother
 
-\setcounter{secnumdepth}{2}
+\setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
+% ToC entries: prefix with "Chương"; ensure spacing and adequate widths
+\renewcommand{\cftsecpresnum}{Chương~}
+\renewcommand{\cftsecaftersnum}{.\space}
+% Set ToC indents and number widths (allow for "Chương" prefix)
+\cftsetindents{section}{0em}{6.8em}
+\setlength{\cftsecnumwidth}{6.8em}
+\cftsetindents{subsection}{1.5em}{2.0em}
+\setlength{\cftsubsecnumwidth}{2.0em}
+\cftsetindents{subsubsection}{3.2em}{2.3em}
+\setlength{\cftsubsubsecnumwidth}{2.3em}
+% subsubsubsection is custom; controlled by \l@subsubsubsection
+\newlength{\cftsubsubsubsectionindent}
+\newlength{\cftsubsubsubsectionnumwidth}
+\cftsetindents{subsubsubsection}{5.0em}{2.6em}
 
 
 % Numbering for label itemization
@@ -211,8 +221,9 @@
 
 
 
+
 \begin{document}
-\pagenumbering{gobble}
+ \pagenumbering{gobble}
 % \captionsetup{justification=centering}
 
 \captionsetup[figure]{labelformat=simple, labelsep=period}
@@ -229,9 +240,16 @@
 % \newpage
 \listoffigures
 \newpage
+% \setcounter{secnumdepth}{0} % Tắt đánh số section
+\listoftables
+\clearpage
+
+\setcounter{secnumdepth}{9} % Đảm bảo đánh số cho các cấp thấp hơn
+
+\pagenumbering{arabic}
+\input{components/project_info}
 \input{components/Section-I/main}
 \input{components/Section-II/main}
-% \setcounter{secnumdepth}{9}
 \input{components/Section-III/main}
 \input{components/Section-IV/main}
 \input{components/Section-V/main}
