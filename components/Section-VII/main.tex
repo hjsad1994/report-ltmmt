@@ -1,32 +1,52 @@
-
 \newpage
-% CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM
+\section{\textbf{CHƯƠNG 4: KẾT QUẢ THỰC NGHIỆM}}
 
-\section{\textbf{CHƯƠNG 5: KẾT QUẢ THỰC NGHIỆM}}
+\subsection{Trang chủ}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/demo/trangchu.png}
+	\caption{Trang chủ}
+\end{figure}
 
-\subsection{Giới thiệu}
-Chương này trình bày các kết quả thực nghiệm thực tế trong quá trình phát triển và triển khai hệ thống NicePhim. Các thử nghiệm tập trung vào hiệu năng streaming, khả năng upload video lớn, tính năng xem phim cá nhân và xem chung (Watch Together), cũng như trải nghiệm giao diện người dùng.
+Trang chủ hiển thị giao diện chính của hệ thống với danh sách các bộ phim nổi bật, phim mới cập nhật và các danh mục phim được sắp xếp khoa học, giúp người dùng dễ dàng tìm kiếm và lựa chọn nội dung yêu thích.
 
-\subsection{1. Thực nghiệm streaming đa chất lượng và upload video lớn}
-\begin{itemize}
-	\item \textbf{Streaming đa chất lượng:} Hệ thống sử dụng FFmpeg để chuyển đổi video sang HLS với nhiều mức chất lượng (360p, 720p, 1080p). Thực nghiệm cho thấy người dùng có thể chuyển đổi chất lượng mượt mà, không gián đoạn.
-	\item \textbf{Upload video lớn:} Đã kiểm thử upload thành công các file video lên tới 500MB, hệ thống backend xử lý và chuyển đổi ổn định, không phát sinh lỗi.
-	\item \textbf{Tối ưu trình phát:} Trình phát SimpleHLSPlayer hỗ trợ chọn chất lượng, tua nhanh/chậm, toàn màn hình, ghi nhớ tiến trình xem.
-\end{itemize}
 
-\subsection{2. Thực nghiệm tính năng xem chung (Watch Together)}
-\begin{itemize}
-	\item \textbf{Đồng bộ thời gian thực:} Tính năng xem chung hoạt động ổn định, đồng bộ phát video giữa các thành viên qua WebSocket (STOMP), kể cả khi có thành viên mới tham gia giữa chừng.
-	\item \textbf{Chat realtime:} Tích hợp chat trực tiếp trong phòng xem chung, kiểm thử với nhiều user cho kết quả phản hồi tức thì.
-	\item \textbf{Quản lý phòng:} Tạo/join phòng, quản lý thành viên, phân quyền quản trị phòng hoạt động đúng như thiết kế.
-\end{itemize}
+\subsection{Chi tiết phim}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/demo/chitiet.png}
+	\caption{Chi tiết phim}
+\end{figure}
 
-\subsection{3. Thực nghiệm giao diện và trải nghiệm người dùng}
-\begin{itemize}
-	\item \textbf{Giao diện responsive:} Giao diện NicePhim hiển thị tốt trên cả máy tính và thiết bị di động, tối ưu thao tác người dùng.
-	\item \textbf{Đăng ký/Đăng nhập:} Quy trình đăng ký, đăng nhập, xác thực hoạt động ổn định, thông báo lỗi rõ ràng.
-	\item \textbf{Quản lý phim/thể loại:} Chức năng thêm, sửa, xoá phim và thể loại qua giao diện admin hoạt động đúng yêu cầu (nếu có).
-\end{itemize}
+Trang chi tiết phim cung cấp thông tin đầy đủ về bộ phim bao gồm mô tả nội dung, thể loại, diễn viên, đạo diễn, thời lượng, đánh giá và các thông tin liên quan khác để người dùng có cái nhìn tổng quan trước khi xem.
 
-\subsection{Tổng kết chương}
-Các kết quả thực nghiệm đã chứng minh hệ thống NicePhim đáp ứng tốt các yêu cầu về hiệu năng streaming, đồng bộ xem chung, upload video lớn và trải nghiệm người dùng. Việc kiểm thử thực tế với các tình huống đa dạng giúp hoàn thiện sản phẩm, sẵn sàng triển khai và phục vụ người dùng cuối.
+
+\subsection{Xem phim cá nhân}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/demo/xemphim.png}
+	\caption{Xem phim cá nhân}
+\end{figure}
+
+Giao diện xem phim cá nhân cung cấp trải nghiệm xem độc lập với trình phát video tích hợp đầy đủ chức năng điều khiển như play, pause, tua, điều chỉnh âm lượng và chế độ toàn màn hình.
+
+
+\subsection{Tùy chọn chất lượng}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/demo/4K.png}
+	\caption{Tùy chọn chất lượng}
+\end{figure}
+
+Hệ thống hỗ trợ người dùng lựa chọn chất lượng video phù hợp với băng thông mạng và thiết bị của mình, từ độ phân giải thấp đến cao như 720p, 1080p, 2K, 4K, đảm bảo trải nghiệm xem mượt mà.
+
+
+\subsection{Chat thời gian thực}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/demo/chat.png}
+	\caption{Chat thời gian thực}
+\end{figure}
+
+Tính năng chat thời gian thực cho phép người dùng trao đổi, thảo luận về nội dung phim với những người xem khác hoặc liên hệ với bộ phận hỗ trợ, tạo sự tương tác và kết nối cộng đồng người dùng.
+

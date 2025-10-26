@@ -8,47 +8,88 @@
 
 Chương này trình bày các kiến thức nền tảng và công nghệ chủ đạo được sử dụng trong quá trình xây dựng hệ thống NicePhim. Việc nắm vững các mô hình kiến trúc, công nghệ nền tảng và công nghệ bổ trợ là cơ sở để phát triển một nền tảng xem phim trực tuyến hiện đại, hiệu quả và bảo mật.
 
-\subsection{Mô hình MVC (Model-View-Controller)}
+\subsection{Mô hình Layer Architecture (Kiến trúc phân lớp)}
 
-Mô hình MVC là một kiến trúc phần mềm phổ biến, chia ứng dụng thành ba thành phần chính:
+Mô hình Layer Architecture là một kiến trúc phần mềm hiện đại, tổ chức ứng dụng thành nhiều lớp độc lập, mỗi lớp đảm nhận một trách nhiệm riêng biệt. Trong hệ thống NicePhim, kiến trúc được chia thành các lớp chính:
+
 \begin{itemize}
-	\item \textbf{Model:} Quản lý dữ liệu, logic nghiệp vụ và trạng thái của ứng dụng. Ví dụ: các lớp Movie, User, Genre trong hệ thống.
-	\item \textbf{View:} Hiển thị dữ liệu cho người dùng, đảm nhận giao diện và trải nghiệm người dùng. Ở NicePhim, View là các component React trên frontend.
-	\item \textbf{Controller:} Tiếp nhận yêu cầu từ người dùng, xử lý logic và điều phối dữ liệu giữa Model và View. Trong backend Spring Boot, các lớp Controller nhận request, gọi Service và trả về response.
+	\item \textbf{Presentation Layer (Lớp Giao diện):} Lớp trên cùng, tương tác trực tiếp với người dùng. Ở NicePhim, lớp này bao gồm các component React/Next.js hiển thị giao diện và xử lý tương tác người dùng.
+
+	\item \textbf{Controller Layer (Lớp Điều khiển):} Tiếp nhận các yêu cầu HTTP từ frontend, kiểm tra tính hợp lệ của dữ liệu đầu vào, và điều phối các yêu cầu tới lớp Service. Các lớp Controller trong Spring Boot như MovieController, UserController, RoomController thuộc lớp này.
+
+	\item \textbf{Service Layer (Lớp Nghiệp vụ):} Xử lý toàn bộ logic nghiệp vụ của ứng dụng. Lớp này chứa các quy tắc, thuật toán xử lý dữ liệu và điều phối giữa các thành phần. Ví dụ: MovieService xử lý logic quản lý phim, VideoService xử lý chuyển đổi video.
+
+	\item \textbf{Repository Layer (Lớp Truy cập Dữ liệu):} Chịu trách nhiệm giao tiếp trực tiếp với cơ sở dữ liệu, thực hiện các thao tác CRUD (Create, Read, Update, Delete). Sử dụng JdbcTemplate trong Spring Boot để thực thi các câu truy vấn SQL.
+
+	\item \textbf{Data Layer (Lớp Dữ liệu):} Lớp cơ sở dữ liệu SQL Server lưu trữ toàn bộ dữ liệu hệ thống bao gồm người dùng, phim, thể loại, phòng xem chung với 6 bảng chính (users, movies, genres, movie\_genres, watch\_rooms, flyway\_schema\_history).
 \end{itemize}
 
-Việc áp dụng MVC giúp tách biệt rõ ràng giữa giao diện, xử lý logic và quản lý dữ liệu, tăng khả năng mở rộng và bảo trì hệ thống.
+\textbf{Ưu điểm của Layer Architecture:}
+\begin{itemize}
+	\item \textbf{Tách biệt trách nhiệm:} Mỗi lớp có một nhiệm vụ rõ ràng, giúp code dễ hiểu và bảo trì.
+	\item \textbf{Dễ dàng mở rộng:} Có thể thay đổi một lớp mà không ảnh hưởng đến các lớp khác.
+	\item \textbf{Tái sử dụng code:} Logic nghiệp vụ trong Service Layer có thể được sử dụng bởi nhiều Controller khác nhau.
+	\item \textbf{Dễ dàng testing:} Có thể test từng lớp độc lập với mock data.
+\end{itemize}
+
+Việc áp dụng Layer Architecture giúp hệ thống NicePhim có cấu trúc rõ ràng, dễ bảo trì và mở rộng, đồng thời tăng khả năng làm việc nhóm hiệu quả.
 
 \subsection{Công nghệ nền tảng}
 
 \textbf{Frontend:}
 \begin{itemize}
-	\item \textbf{Next.js 15, React 19:} Xây dựng giao diện động, tối ưu SEO, hỗ trợ routing hiện đại.
-	\item \textbf{TypeScript:} Tăng tính an toàn, dễ bảo trì nhờ kiểm tra kiểu dữ liệu tĩnh.
-	\item \textbf{Tailwind CSS:} Thiết kế giao diện responsive, hiện đại, dễ tuỳ biến.
+	\item \textbf{Next.js 15, React 19:} Framework hiện đại xây dựng giao diện động với App Router, tối ưu SEO, hỗ trợ Server-Side Rendering (SSR) và Static Site Generation (SSG).
+	\item \textbf{TypeScript:} Ngôn ngữ lập trình tăng tính an toàn với kiểm tra kiểu dữ liệu tĩnh, giảm thiểu lỗi runtime và tăng khả năng bảo trì code.
+	\item \textbf{Tailwind CSS:} Framework CSS utility-first giúp thiết kế giao diện responsive, hiện đại với glass-morphism effects và animations.
 \end{itemize}
 
 \textbf{Backend:}
 \begin{itemize}
-	\item \textbf{Spring Boot 3.1.5, Java 17:} Xây dựng API RESTful, xử lý logic nghiệp vụ, bảo mật, quản lý session.
-	\item \textbf{Microsoft SQL Server:} Lưu trữ dữ liệu, đảm bảo tính nhất quán và hiệu năng.
-	\item \textbf{Flyway:} Quản lý migration, tự động cập nhật cấu trúc database.
-	\item \textbf{WebSocket (STOMP):} Đồng bộ dữ liệu thời gian thực cho tính năng xem chung.
+	\item \textbf{Spring Boot 3.1.5, Java 17:} Framework mạnh mẽ xây dựng API RESTful, xử lý logic nghiệp vụ phức tạp, bảo mật với BCrypt, và quản lý dependency injection.
+	\item \textbf{Microsoft SQL Server:} Hệ quản trị cơ sở dữ liệu quan hệ lưu trữ 6 bảng chính (users, movies, genres, movie\_genres, watch\_rooms, flyway\_schema\_history) với UUID làm khóa chính.
+	\item \textbf{Flyway:} Công cụ quản lý database migration tự động, đảm bảo version control cho schema và hỗ trợ rollback khi cần thiết.
+\end{itemize}
+
+\textbf{Công nghệ truyền tải video và giao tiếp thời gian thực:}
+
+\begin{itemize}
+	\item \textbf{HLS (HTTP Live Streaming):} Giao thức streaming video phát triển bởi Apple, cho phép phát video thích ứng (adaptive streaming) với nhiều mức chất lượng (360p, 720p, 1080p, 2K, 4K). HLS chia video thành các segment nhỏ (.ts files) và sử dụng manifest file (.m3u8) để quản lý các segment này. Người dùng có thể chuyển đổi chất lượng video mượt mà dựa trên băng thông mạng.
+
+	\item \textbf{WebSocket với STOMP Protocol:} Công nghệ giao tiếp hai chiều (full-duplex) thời gian thực giữa client và server. STOMP (Simple Text Oriented Messaging Protocol) là một giao thức messaging đơn giản chạy trên WebSocket, cho phép đồng bộ trạng thái video (play, pause, seek) và chat trực tiếp trong các phòng xem chung. WebSocket duy trì kết nối liên tục, giúp cập nhật dữ liệu tức thì mà không cần polling.
+
+	\item \textbf{FFmpeg:} Công cụ xử lý video mạnh mẽ với khả năng chuyển đổi video sang định dạng HLS với nhiều variant chất lượng. FFmpeg tự động tạo ra 5 phiên bản chất lượng khác nhau (v0: 4K/2160p, v1: 2K/1440p, v2: 1080p, v3: 720p, v4: 360p) với bitrate tối ưu. Quá trình này bao gồm: (1) Nhận video gốc, (2) Phân tích thông số video, (3) Tạo các variant với codec H.264, (4) Tạo master playlist (.m3u8), (5) Lưu trữ segments và playlists.
+\end{itemize}
+
+\textbf{Kiến trúc tích hợp:}
+Ba công nghệ này phối hợp với nhau tạo nên trải nghiệm streaming hoàn chỉnh:
+\begin{itemize}
+	\item FFmpeg xử lý và chuyển đổi video thành HLS format với nhiều chất lượng.
+	\item HLS.js trên frontend phát video và tự động chọn chất lượng phù hợp với băng thông.
+	\item WebSocket đồng bộ trạng thái phát video giữa các người dùng trong phòng xem chung và hỗ trợ chat thời gian thực.
 \end{itemize}
 
 \subsection{Công nghệ bổ trợ}
 
 \begin{itemize}
-	\item \textbf{FFmpeg:} Chuyển đổi và xử lý video sang định dạng HLS đa chất lượng, phục vụ streaming mượt mà.
-	\item \textbf{HLS.js:} Thư viện frontend hỗ trợ phát video HLS, tự động chọn chất lượng phù hợp.
-	\item \textbf{BCrypt:} Bảo mật mật khẩu người dùng bằng thuật toán hash mạnh.
-	\item \textbf{Jakarta Validation:} Kiểm tra tính hợp lệ của dữ liệu đầu vào trên backend.
-	\item \textbf{Headless UI, Heroicons:} Xây dựng giao diện người dùng đẹp, nhất quán.
-	\item \textbf{Flyway:} Tự động hóa quản lý phiên bản database.
+	\item \textbf{HLS.js:} Thư viện JavaScript phát video HLS trên trình duyệt web, tự động chọn chất lượng phù hợp dựa trên băng thông mạng (adaptive bitrate streaming). Hỗ trợ fallback khi trình duyệt không hỗ trợ HLS native.
+
+	\item \textbf{React Player:} Component React mạnh mẽ hỗ trợ nhiều loại video player (HLS, YouTube, Vimeo, etc.) với API đơn giản và dễ tùy chỉnh.
+
+	\item \textbf{BCrypt:} Thuật toán hash mật khẩu an toàn với salt rounds, bảo vệ thông tin người dùng khỏi các cuộc tấn công brute-force và rainbow table.
+
+	\item \textbf{Jakarta Validation:} Framework kiểm tra tính hợp lệ của dữ liệu đầu vào trên backend với các annotation như @NotNull, @Email, @Size. Hỗ trợ thông báo lỗi tiếng Việt.
+
+	\item \textbf{JdbcTemplate:} API Spring framework để thực thi câu lệnh SQL với parameterized queries, ngăn chặn SQL injection và tối ưu hiệu năng truy vấn.
+
+	\item \textbf{Headless UI, Heroicons:} Thư viện UI components không phụ thuộc vào styling và bộ icon SVG chất lượng cao, giúp xây dựng giao diện người dùng đẹp, nhất quán và accessible.
+
+	\item \textbf{Docker:} Công nghệ containerization chạy SQL Server 2022 trong môi trường cô lập với persistent volume, đảm bảo tính nhất quán giữa các môi trường development.
+
+	\item \textbf{SockJS:} Thư viện JavaScript cung cấp WebSocket fallback, đảm bảo kết nối thời gian thực hoạt động ngay cả khi WebSocket bị chặn bởi proxy hoặc firewall.
 \end{itemize}
 
-Các công nghệ bổ trợ này giúp nâng cao hiệu năng, bảo mật, trải nghiệm người dùng và khả năng mở rộng của hệ thống.
+Các công nghệ bổ trợ này giúp nâng cao hiệu năng, bảo mật, trải nghiệm người dùng và khả năng mở rộng của hệ thống. Sự kết hợp của các công nghệ này tạo nên một nền tảng streaming video hoàn chỉnh và chuyên nghiệp.
 
 \subsection{Tổng kết chương}
 
-Chương này đã trình bày các kiến thức nền tảng về mô hình kiến trúc MVC, các công nghệ chủ đạo và công nghệ bổ trợ được sử dụng trong dự án NicePhim. Việc lựa chọn và kết hợp các công nghệ hiện đại là yếu tố then chốt giúp hệ thống đạt được hiệu quả, bảo mật và trải nghiệm người dùng tối ưu.
+Chương này đã trình bày các kiến thức nền tảng về mô hình kiến trúc Layer Architecture (Presentation, Controller, Service, Repository, Data), các công nghệ chủ đạo bao gồm Next.js, Spring Boot, SQL Server, và đặc biệt là bộ ba công nghệ streaming: HLS, WebSocket và FFmpeg. Việc lựa chọn và kết hợp các công nghệ hiện đại này là yếu tố then chốt giúp hệ thống NicePhim đạt được hiệu quả cao trong việc streaming video chất lượng cao, đồng bộ thời gian thực, bảo mật thông tin người dùng và mang lại trải nghiệm người dùng tối ưu. Kiến trúc phân lớp rõ ràng cùng với stack công nghệ mạnh mẽ tạo nền tảng vững chắc cho sự phát triển và mở rộng hệ thống trong tương lai.

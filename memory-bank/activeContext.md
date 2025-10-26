@@ -1,9 +1,35 @@
 # Active Context: NicePhim Development Focus
 
-## Current Sprint: Video Player Enhancement & User Experience
-**Goal**: Complete video player functionality with intuitive controls and smooth user interaction
+## Current Sprint: Database Simplification & Quality Enhancements ✅
+**Goal**: Simplify database schema by removing unused features and enhance video quality support
+
+## Latest Changes (October 2025)
+- ✅ **Database V7 Migration**: Removed 10 unused tables - simplified from 15 tables to 6 (60% reduction)
+- ✅ **2K/4K Quality Support**: VideoService now generates 5 quality variants (4K, 2K, 1080p, 720p, 360p)
+- ✅ **Upload Limit Increased**: Raised video upload limit from 500MB to **5GB** for large video files
+- ✅ **Upload Timeout Enhancement**: Extended server timeout to 600 seconds (10 minutes) for large file uploads
+- ✅ **Codebase Optimization**: Major cleanup removing demo/test controllers and simplifying architecture
+- ✅ **Auto Video Bitrate**: Implemented automatic video bitrate adjustment for optimal streaming quality
+- ✅ **Broadcast Scheduling Simplification**: Removed complex scheduling logic - rooms now always start immediately
+- ✅ **SSE Controller Removal**: Removed RoomSSEController in favor of WebSocket-only communication
+- ✅ **Quality Display Improvements**: Enhanced video player quality indicator format (Tự động (720) vs Tự động (720p))
+- ✅ **UI Component Cleanup**: Removed ReviewSlider component and duplicate WatchTogetherPlayer files
+
+## Codebase Analysis Update
+**Recent comprehensive analysis completed**:
+- **Backend**: 40 Java files analyzed - complete Spring Boot MVC architecture with proper separation of concerns
+- **Frontend**: 45 TypeScript/React files analyzed - modern Next.js App Router with cinematic UI components
+- **Architecture**: Well-structured codebase with proper patterns for streaming platform development
+- **Video System**: Complete HLS streaming pipeline with FFmpeg integration and adaptive quality selection
+- **Database**: SQL Server with proper relationships and video metadata integration
 
 ## Recent Changes
+- ✅ **Database Type Casting Fixes**: Resolved ClassCastException between Short and Integer types for TINYINT database columns (playback_state)
+- ✅ **Unique Constraint Resolution**: Fixed UNIQUE KEY constraint violations on invite_code field by generating unique 8-character codes for all rooms
+- ✅ **CORS Configuration**: Added @CrossOrigin annotation to RoomController to enable frontend API calls from localhost:3000
+- ✅ **BCrypt Password Hashing**: Fixed user creation in createOrUpdateSimpleUser method to use proper BCrypt hashing instead of empty byte arrays
+- ✅ **Frontend UUID Validation**: Added validation to only send movieId when it's in proper UUID format to backend
+- ✅ **Enhanced Error Logging**: Added comprehensive console logging throughout room creation process for better debugging
 - ✅ **Video Upload Size Limit Fix**: Increased Spring Boot upload limits to 500MB for large video files
 - ✅ **Backend Controller Conflicts Resolved**: Fixed TestController naming conflicts by renaming to VideoTestController
 - ✅ **Backend Startup Stability**: Application starts successfully after resolving bean definition conflicts
@@ -105,56 +131,133 @@
 - ✅ **Button Styling Consistency**: Made "Xem Ngay", "Xem Chung", and "Thích" buttons consistent with homepage styling
 - ✅ **Homepage Auto-play Carousel**: Implemented auto-changing movies with progress indicator and user controls
 - ✅ **Movie Carousel Optimization**: Enhanced transition timing and repositioned mini movie cards for better UX
+- ✅ **Video Upload Path Configuration**: Fixed Windows path conflicts in application.properties - updated default paths to use correct Mac paths (/Users/trantai/Documents/NicePhim/...)
+- ✅ **Hero Component UI Adjustments**: Moved content left with negative margins (-ml-20 lg:-ml-30) and reduced heading text size for better layout
+- ✅ **Media Directory Creation**: Created required directories (videos_demo, media, poster_img, banner_img) for proper file storage
+- ✅ **Watch Together Feature Completion**: Fully functional real-time collaborative viewing system with WebSocket synchronization
+- ✅ **Watch Together Username System**: Implemented username input and localStorage-based user session management for room creation
+- ✅ **Watch Together Room Management**: Fixed room creation, storage, and retrieval from localStorage with proper user filtering
+- ✅ **Watch Together Video Synchronization**: Implemented sync button functionality to synchronize viewer playback with room host position
+- ✅ **Watch Together Error Handling**: Fixed loadMovie function error and WebSocket connection issues with robust error handling
+- ✅ **Watch Together Room Display**: Updated room management page to show "Chưa có phòng nào" when no rooms exist, removed fallback mock data
+- ✅ **Watch Together User Experience**: Enhanced room creation flow with username validation and proper redirect handling
+- ✅ **Complete Test File Cleanup**: Removed all test files, test pages, and test functions from entire codebase for production readiness
+- ✅ **Backend Test Removal**: Deleted TestController, VideoTestController, DemoApplicationTests, and entire src/test directory
+- ✅ **Frontend Test Removal**: Deleted 6 test page directories (/test-api, /test-complete-flow, /test-connection, /test-login, /test-video, /test-video-upload) and test utility files
+- ✅ **Root Test Files Cleanup**: Removed test-image-upload.html, test-sync.html, websocket-test.html from project root
+- ✅ **Production-Ready Codebase**: Clean codebase with only production features, no development/test utilities
 
-## Current Focus
-1. ✅ **Video Player State Update Issue**: RESOLVED - Quality and speed selection buttons now display selected values correctly
-2. ✅ **HLS Adaptive Quality Switching**: RESOLVED - Quality selection now changes actual video quality (360p, 480p, 720p, 1080p)
-3. ✅ **Movie Slug API Implementation**: RESOLVED - Movie watching pages now fetch real data from database instead of using mock data
-4. ✅ **Image Upload System**: RESOLVED - Complete image upload functionality for movie posters and banners
-5. ✅ **Environment Configuration**: RESOLVED - Created .env file for flexible directory URL management, allowing developers to easily change paths without modifying source code
-6. ✅ **Windows Path Configuration**: RESOLVED - Updated media directory paths and ffmpeg path for Windows environment
-7. ✅ **Authentication State Management**: RESOLVED - Fixed header user icon requiring page reload after login
-8. ✅ **Video Upload Path Error**: RESOLVED - Fixed file path error with proper directory creation
-9. ✅ **Movie Detail Page Redesign**: RESOLVED - Updated /phim/ page to match homepage cinematic style
-10. ✅ **Button Styling Consistency**: RESOLVED - Made all buttons consistent with homepage styling
-11. ✅ **Homepage Auto-play Carousel**: RESOLVED - Implemented auto-changing movies with user controls
-12. ✅ **Movie Carousel Optimization**: RESOLVED - Enhanced transitions and repositioned mini movie cards
-13. **Content Population**: Continue creating movies with real videos and assigning them to genres
-14. **End-to-End Testing**: Complete video workflow from upload to playback
+## Current Focus: Database Simplification Complete ✅
+**Major database cleanup and architectural simplifications completed:**
+
+### Database Migrations & Schema Cleanup
+1. ✅ **V7 Migration - Table Cleanup**: Removed 10 unused tables reducing database from 15 to 6 tables (60% reduction)
+2. ✅ **V4 Migration - Broadcast Removal**: Removed broadcast scheduling fields - rooms now always start immediately
+3. ✅ **V5 Migration - Privacy Removal**: Removed is_private field - all rooms are now public
+4. ✅ **V6 Migration - Invite Code Cleanup**: Removed unique constraint on invite_code
+5. ✅ **Schema Simplification**: Only essential tables remain (users, movies, genres, movie_genres, watch_rooms)
+
+### Video Quality Enhancements
+6. ✅ **2K/4K Support**: VideoService generates 5 quality variants (4K, 2K, 1080p, 720p, 360p)
+7. ✅ **Dynamic HLS Generation**: Quality variants generated on-the-fly without database storage
+8. ✅ **Adaptive Bitrate**: Automatic bitrate optimization based on input video resolution
+9. ✅ **Quality Display**: SimpleHLSPlayer shows accurate quality info (Tự động (720) format)
+
+### Architecture Improvements
+10. ✅ **In-Memory Room Members**: Room membership tracked in WatchRoomService.roomUsers Map instead of database
+11. ✅ **Real-Time Chat Only**: Chat messages not persisted - real-time WebSocket communication only
+12. ✅ **Simplified Room Model**: Removed episode_id and current_rendition from watch_rooms table
+13. ✅ **Upload Limit**: Supports 5GB file uploads with 600-second timeout for large video processing
+
+## Previous Focus: Automatic Username Implementation ✅ COMPLETE
+1. ✅ **Manual Username Input Removal**: Completely removed manual username input field from room creation form
+2. ✅ **Automatic Username Detection**: Implemented automatic username extraction from authenticated user accounts
+3. ✅ **Authentication Integration**: Enhanced room creation to require user authentication before allowing room creation
+4. ✅ **Real-time Username Updates**: Added auth-change event listeners for immediate username updates across the application
+5. ✅ **Backward Compatibility**: Maintained compatibility with existing watchTogetherUser localStorage for non-authenticated users
+6. ✅ **Room Page Enhancement**: Updated room viewer display to automatically show authenticated usernames
+7. ✅ **Error Handling**: Implemented proper validation and user feedback for authentication requirements
+8. ✅ **Code Quality**: Clean, maintainable code structure with proper separation of concerns
+9. ✅ **User Experience**: Streamlined room creation flow without manual username entry requirements
+10. ✅ **Testing Verification**: Confirmed all functionality works correctly with authenticated users
+
+## Current Focus: Video Seeking and Host Detection Enhancement ✅ COMPLETE
+1. ✅ **Video Seeking Implementation**: Enhanced watch-together functionality allowing viewers to seek video and synchronize with room creator
+2. ✅ **Host Detection System**: Implemented automatic host detection based on UUID comparison between room creator and current user
+3. ✅ **Room Management Fixes**: Fixed room visibility issues in management page with localStorage fallback mechanism
+4. ✅ **User ID Retrieval**: Resolved user ID issues where currentUser was showing username instead of UUID
+5. ✅ **Button Cleanup**: Removed "Làm Chủ Phòng" buttons once automatic host detection was working properly
+6. ✅ **WebSocket Sync Optimization**: Enhanced synchronization between host and viewers with proper control message handling
+7. ✅ **UUID vs Username Mismatch Fix**: Fixed core issue where backend returns UUID for roomCreator but frontend was comparing with username
+8. ✅ **Seeking Functionality**: Enhanced WatchTogetherPlayer component with seeking capabilities for all users
+9. ✅ **Authentication Enhancement**: Improved user authentication and identification system with proper ID mapping
+10. ✅ **Room Creator Verification**: Enhanced localStorage integration for room ownership verification
+
+## Previous Focus: Complete Test File Cleanup ✅ COMPLETE
+1. ✅ **Backend Test Removal**: Deleted TestController, VideoTestController, and DemoApplicationTests from backend
+2. ✅ **Test Directory Cleanup**: Removed entire src/test directory structure from backend
+3. ✅ **Frontend Test Pages Removal**: Deleted 6 test page directories from Next.js app router
+4. ✅ **Root Test Files Cleanup**: Removed test HTML files (test-image-upload.html, test-sync.html, websocket-test.html)
+5. ✅ **Test Utilities Removal**: Deleted debug-test.js and test-api.html from frontend public directory
+6. ✅ **Static Resources Cleanup**: Removed test-websocket.html from backend static resources
+7. ✅ **Codebase Verification**: Confirmed no remaining test files or test functions in production code
+8. ✅ **Production Readiness**: Achieved clean codebase with only production features
+9. ✅ **Documentation Update**: Updated Memory Bank to reflect production-ready status
+10. ✅ **Final Scan**: Verified complete removal with glob patterns and verification commands
+
+## Previous Focus: Sync Functionality Removal ✅ COMPLETE
+1. ✅ **Frontend Sync Removal**: Complete removal of sync-related state variables, functions, and UI elements
+2. ✅ **Interface Cleanup**: Updated ControlMessage interface to remove sync-related types and actions
+3. ✅ **Video Player Liberation**: Re-enabled seeking functionality and native video controls
+4. ✅ **Backend Logging Optimization**: Reduced excessive logging that was causing performance issues
+5. ✅ **WebSocket Simplification**: Streamlined message handling without sync complexity
+6. ✅ **Performance Enhancement**: Eliminated spammy sync messages causing lag
+7. ✅ **User Freedom**: Users now have full control over video playback without forced synchronization
+8. ✅ **Component Testing**: Verified component compiles and runs without sync functionality
+9. ✅ **Error Resolution**: Fixed remaining references to removed sync functions
+10. ✅ **Code Cleanup**: Removed all sync-related comments and outdated code
+
+## Previous Completed Features
+10. ✅ **Video Player State Update Issue**: RESOLVED - Quality and speed selection buttons now display selected values correctly
+11. ✅ **HLS Adaptive Quality Switching**: RESOLVED - Quality selection now changes actual video quality (360p, 480p, 720p, 1080p)
+12. ✅ **Movie Slug API Implementation**: RESOLVED - Movie watching pages now fetch real data from database instead of using mock data
+13. ✅ **Image Upload System**: RESOLVED - Complete image upload functionality for movie posters and banners
+14. ✅ **Environment Configuration**: RESOLVED - Created .env file for flexible directory URL management, allowing developers to easily change paths without modifying source code
+15. ✅ **Windows Path Configuration**: RESOLVED - Updated media directory paths and ffmpeg path for Windows environment
+16. ✅ **Authentication State Management**: RESOLVED - Fixed header user icon requiring page reload after login
+17. ✅ **Video Upload Path Error**: RESOLVED - Fixed file path error with proper directory creation
+18. ✅ **Movie Detail Page Redesign**: RESOLVED - Updated /phim/ page to match homepage cinematic style
+19. ✅ **Button Styling Consistency**: RESOLVED - Made all buttons consistent with homepage styling
+20. ✅ **Homepage Auto-play Carousel**: RESOLVED - Implemented auto-changing movies with user controls
+21. ✅ **Movie Carousel Optimization**: RESOLVED - Enhanced transitions and repositioned mini movie cards
 
 ## Next Steps
-1. ✅ **Video Player State Update Issue**: RESOLVED - Quality and speed selection buttons now display selected values correctly
-2. ✅ **HLS Adaptive Quality Switching**: RESOLVED - Quality selection now changes actual video quality
-3. ✅ **Movie Edit Page JSX Fix**: RESOLVED - Fixed parsing error by moving genre selection modal inside return statement
-4. ✅ **Header Branding Update**: RESOLVED - Changed header logo from "Rophim" to "NicePhim" for consistent branding
-5. ✅ **Image Upload Integration**: RESOLVED - Added poster and banner upload functionality to movie upload page
-6. ✅ **Image Upload Label Styling**: RESOLVED - Fixed ImageUpload component labels to display in white
-7. ✅ **Admin View Button Fix**: RESOLVED - Fixed admin movies view button to redirect to public movie page
-8. ✅ **Windows Path Configuration**: RESOLVED - Updated .env file media paths and ffmpeg path for Windows
-9. ✅ **Authentication State Issue**: RESOLVED - Fixed header user icon requiring page reload after login
-10. ✅ **Video Upload Path Error**: RESOLVED - Fixed file path error with proper directory creation
-11. ✅ **Movie Detail Page Styling**: RESOLVED - Updated /phim/ page to match homepage cinematic style
-12. ✅ **Button Styling Consistency**: RESOLVED - Made all buttons consistent with homepage styling
-13. ✅ **Homepage Auto-play Feature**: RESOLVED - Implemented auto-changing movies with progress indicator
-14. ✅ **Movie Carousel Positioning**: RESOLVED - Optimized mini movie card positioning and transitions
-15. **Test Video Player Functionality**: Verify click (play/pause) and double-click (fullscreen) work correctly
-16. **Test HLS Streaming**: Verify adaptive quality streaming works properly with real videos
-17. **Test Complete Video Workflow**: Upload MP4 → Create movie → Watch from homepage
-18. **Test Watch Together with Real Videos**: Ensure collaborative watching works with uploaded videos
-19. **Create Movies with Videos**: Use /admin/movies/upload to create movies with real video content
-20. **Assign Genres to Movies**: Use movie edit interface to assign movies to genres
-21. **Test Genre Pages**: Verify genre pages show movies with videos after assignment
-22. **Test Movie Routing**: Verify all movie detail pages work correctly with video data
-23. **Frontend Upload Connection**: Fix frontend "Failed to fetch" error when connecting to video upload API
-24. **Video Field Restoration**: Uncomment video field access in MovieRepository RowMapper
-25. **Environment Configuration Documentation**: Update documentation to guide developers on using .env file for configuration management
-20. Add bulk genre operations for multiple movies
-21. Enhance admin dashboard with video upload statistics
-22. Add proper session management (JWT tokens or secure sessions)
-23. Create user profile management interface
-24. Implement advanced search and filtering for movies and genres
+1. **Video Quality Testing**: Verify auto bitrate adjustment works correctly across different network conditions
+2. **Room Creation Verification**: Test simplified room creation flow (always immediate start)
+3. **WebSocket Performance**: Monitor WebSocket-only communication performance vs previous SSE approach
+4. **User Profile Management**: Create user profile interface for managing account information
+5. **Session Management Enhancement**: Implement more secure session management (JWT tokens or secure sessions)
+6. **User Settings Page**: Add user preferences and settings management
+7. **Avatar System**: Implement user avatar upload and display functionality
+8. **Logout Functionality**: Implement proper logout with session cleanup
+9. **User Activity Tracking**: Add user activity history and statistics
+10. **Social Features**: Add friend system and user following functionality
+11. **Notification System**: Implement real-time notifications for room invitations and messages
+12. **Email Verification**: Account activation system
+13. **Password Reset**: Forgot password functionality
+14. **Advanced Search**: Enhanced search and filtering for movies and genres
+15. **Bulk Genre Operations**: Mass genre assignment for multiple movies
+16. **Admin Dashboard Enhancement**: Add statistics and analytics
+17. **Performance Optimization**: Optimize database queries and caching
 
 ## Technical Decisions
+- **Broadcast Scheduling Architecture**: Implemented server-managed time synchronization for coordinated video playback across multiple users
+- **Database Schema Design**: Added V3 migration with broadcast scheduling fields (scheduled_start_time, broadcast_start_time_type, broadcast_status, actual_start_time, server_managed_time)
+- **Video Player Control Restriction**: Disabled seeking in broadcast mode to maintain synchronization, allowing only pause/resume functionality
+- **WebSocket Communication Enhancement**: Updated WebSocket handlers to support broadcast state synchronization and server time coordination
+- **Frontend-Backend Integration**: Seamless integration between frontend UI (broadcast time selection) and backend API for room creation and management
+- **Time Synchronization Algorithm**: Server-side calculation of current playback position based on scheduled start time and playback state
+- **Room Management API**: Complete REST API endpoints for room CRUD operations with broadcast scheduling support
 - **Environment Configuration Management**: Implemented .env file support for flexible directory URL management, allowing developers to easily change paths without modifying source code
 - **Video Upload Configuration**: Increased Spring Boot upload limits to 500MB for large video files
 - **Controller Conflict Resolution**: Renamed TestController to VideoTestController to resolve bean definition conflicts
@@ -194,7 +297,40 @@
 ## Blockers
 - None currently identified
 
-## Notes
+## Recent Issues Resolved
+1. **ClassCastException in BroadcastSchedulerService** - Fixed casting issues where database TINYINT columns return Short but code expected Integer
+2. **Unique Key Constraint Violations** - Resolved by generating unique invite codes for all rooms instead of NULL values
+3. **CORS Errors** - Fixed by adding @CrossOrigin annotation to RoomController
+4. **BCrypt Password Hashing Issues** - Fixed user creation that was using empty byte arrays instead of proper BCrypt hashes
+5. **Frontend-Backend Integration** - Enhanced error handling and validation for room creation API calls
+
+## Notes: Test File Cleanup Complete ✅
+- **All Test Files Removed** - Eliminated all test files, test pages, and test functions from entire codebase
+- **Backend Tests Cleaned** - Deleted TestController, VideoTestController, DemoApplicationTests, and entire src/test directory
+- **Frontend Tests Cleaned** - Removed 6 test page directories and test utility files from Next.js app
+- **Root Directory Cleaned** - Removed test HTML files from project root (test-image-upload.html, test-sync.html, websocket-test.html)
+- **Static Resources Cleaned** - Removed test-websocket.html from backend static resources
+- **Production Ready** - Clean codebase with only production features and no development/test utilities
+- **Code Quality Improved** - Simplified project structure with focus on production code
+- **Verification Complete** - Confirmed no remaining test files through glob patterns and find commands
+- **Documentation Updated** - Memory Bank reflects production-ready status
+- **Maintenance Simplified** - Easier to maintain and navigate codebase without test clutter
+
+## Notes: Sync Functionality Removal Complete ✅
+- **Sync Feature Completely Removed** - Eliminated all sync-related code from WatchTogetherPlayer component to resolve performance issues
+- **Performance Issues Resolved** - Removed spammy sync messages that were causing lag in watch together rooms
+- **User Freedom Restored** - Users now have full control over video playback without forced synchronization
+- **Video Player Controls Re-enabled** - Restored seeking functionality and native video controls
+- **Backend Logging Optimized** - Reduced excessive logging in WatchRoomService, BroadcastScheduler, and BroadcastSchedulerService
+- **Component Simplified** - Removed complex sync state management and periodic polling
+- **WebSocket Streamlined** - Simplified message handling without sync-related complexity
+- **Interface Definitions Cleaned** - Updated ControlMessage interface to remove sync-related types and actions
+- **Code Quality Improved** - Removed deprecated sync functions and references
+- **User Experience Enhanced** - Smoother, more responsive watch together experience
+- **Testing Completed** - Verified component compiles and runs without sync functionality
+- **Future Considerations** - Backend broadcast scheduling infrastructure remains available if optional sync features are desired later
+
+## Previous System Status
 - **Video Upload System Operational** - Backend successfully processing large video files (400MB+) with FFmpeg HLS conversion
 - **Video Processing Pipeline Active** - FFmpeg creating multiple quality variants (360p, 720p, 1080p) with proper HLS streaming
 - **Movie Creation with Video Data** - Movies being created with video_id, hls_url, and video_status fields populated
