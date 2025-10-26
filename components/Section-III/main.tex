@@ -28,7 +28,7 @@ NicePhim được xây dựng với kiến trúc Layer Architecture hiện đạ
 
 	\item \textbf{Database (Data Layer):} Microsoft SQL Server với 6 bảng chính: users, movies, genres, movie\_genres (junction table), watch\_rooms, và flyway\_schema\_history. Sử dụng UUID làm khóa chính, quản lý migration tự động qua Flyway (7 versions), đảm bảo tính toàn vẹn dữ liệu và khả năng mở rộng.
 
-	\item \textbf{Video Processing:} Hệ thống xử lý video với FFmpeg, tự động chuyển đổi video upload thành định dạng HLS với 5 mức chất lượng (360p, 720p, 1080p, 2K/1440p, 4K/2160p). Hỗ trợ upload file lên đến 5GB với timeout 600 giây. Video được lưu trữ dưới dạng segments (.ts files) và manifest files (.m3u8).
+	\item \textbf{Video Processing:} Hệ thống xử lý video với FFmpeg, tự động chuyển đổi video upload thành định dạng HLS với 5 mức chất lượng (360p, 720p, 1080p, 2K/1440p, 4K/2160p). Hỗ trợ upload file không giới hạn với timeout 600 giây. Video được lưu trữ dưới dạng segments (.ts files) và manifest files (.m3u8).
 \end{itemize}
 
 \textbf{Tính năng chính đã triển khai:}
