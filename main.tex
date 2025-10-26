@@ -112,11 +112,13 @@
 \titlespacing{\section}{0pt}{*1.6}{0.3em}
 % Show "Chương <số>. <Tiêu đề>" with moderate separation
 \titleformat{\section}{\bfseries\large}{Chương\ \thesection.}{0.35em}{}
-\renewcommand{\thesubsection}{\arabic{subsection}}
-% Giảm khoảng cách giữa số và tiêu đề cho các cấp mục nhỏ
-% Thu hẹp tối đa khoảng cách sau số mục
-\titleformat{\subsection}{\bfseries\large}{\thesubsection.}{0em}{}
-\titleformat{\subsubsection}{\bfseries\normalsize}{\thesubsubsection.}{0em}{}
+% Subsection numbering: 1.1, 1.2, 2.1, 2.2, etc.
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+% Subsubsection numbering: 1.1.1, 1.1.2, etc.
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+% Spacing giữa số và tiêu đề cho các cấp mục
+\titleformat{\subsection}{\bfseries\large}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\bfseries\normalsize}{\thesubsubsection.}{0.5em}{}
 
 % subsubsbusection
 \titleclass{\subsubsubsection}{straight}[\subsection]
@@ -156,10 +158,10 @@
 % Set ToC indents and number widths (allow for "Chương" prefix)
 \cftsetindents{section}{0em}{6.8em}
 \setlength{\cftsecnumwidth}{6.8em}
-\cftsetindents{subsection}{1.5em}{2.0em}
-\setlength{\cftsubsecnumwidth}{2.0em}
-\cftsetindents{subsubsection}{3.2em}{2.3em}
-\setlength{\cftsubsubsecnumwidth}{2.3em}
+\cftsetindents{subsection}{1.5em}{2.5em}
+\setlength{\cftsubsecnumwidth}{2.5em}
+\cftsetindents{subsubsection}{3.2em}{3.0em}
+\setlength{\cftsubsubsecnumwidth}{3.0em}
 % subsubsubsection is custom; controlled by \l@subsubsubsection
 \newlength{\cftsubsubsubsectionindent}
 \newlength{\cftsubsubsubsectionnumwidth}
